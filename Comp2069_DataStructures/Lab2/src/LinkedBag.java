@@ -23,7 +23,11 @@ public class LinkedBag<T> implements IBag<T> {
 
     @Override
     public boolean add(T item) {
-        return false;
+        Node newNode = new Node(item);
+        newNode.nextNode = firstNode;
+        firstNode = newNode;
+        size++;
+        return true;
     }
 
     @Override
@@ -53,7 +57,14 @@ public class LinkedBag<T> implements IBag<T> {
 
     @Override
     public T[] toaArray() {
-        return ((T[]) new Object[0]);
+        T[] result = (T[]) new Object[size];
+        Node currentNode;
+        int count = 0;
+        for (currentNode = firstNode; currentNode != null; currentNode = currentNode.getNextNode()) {
+            result[count] = currentNode.getData();
+            count++;
+        }
+        return result;
     }
 
     protected class Node {
