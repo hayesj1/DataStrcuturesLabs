@@ -24,7 +24,7 @@ public class ArrayBag<T> implements IBag<T> {
 
     @Override
     public boolean isEmpty() {
-        return (size == 0 ? true : false);
+        return (size == 0);
     }
 
     @Override
