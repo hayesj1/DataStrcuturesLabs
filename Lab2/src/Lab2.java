@@ -13,7 +13,7 @@ public class Lab2 {
     public static void main(String[] args)
     {
         String[] arrayBagVal = { "Apples", "Oranges", "Bananas", "Milk"};
-        String[] linkedBagVal = {"Kiwi", "Watermellon", "Apple", "Zebra"};
+        String[] linkedBagVal = {"Kiwi", "Watermelon", "Apple", "Zebra"};
         ArrayBag arrayBag = new ArrayBag<String>();
         LinkedBag linkedBag = new LinkedBag<String>();
 
@@ -37,10 +37,11 @@ public class Lab2 {
         firstBag.add("Ni hao");
         firstBag.add("Konichiwa");
         firstBag.add("I don't know how to say hello in any more languages");
-        firstBag.add("INSERT_TEXT_HERE");
+        firstBag.add("Olah");
         secondBag.add("Goodbye");
         secondBag.add("Hi");
         secondBag.add("Ni hao");
+        secondBag.add("Shalom");
 
         //testing
         ResizableArrayBag<String> thirdBag = new ResizableArrayBag<String>().intersection(firstBag, secondBag);
