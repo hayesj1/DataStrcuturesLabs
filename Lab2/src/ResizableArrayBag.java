@@ -30,6 +30,6 @@ public class ResizableArrayBag<T> extends ArrayBag {
 
     @Override
     protected boolean isFull() {
-        return (getSize() >= capacity);
+        return (getCurrentSize() >= capacity);
     }
 }

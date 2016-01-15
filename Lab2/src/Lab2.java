@@ -10,7 +10,25 @@
  */
 public class Lab2 {
 
-    public static void main(String[] args) {
-        //TODO write a est program!
+    public static void main(String[] args)
+    {
+        String[] arrayBagVal = { "Apples", "Oranges", "Bananas", "Milk"};
+        String[] linkedBagVal = {"Kiwi", "Watermellon", "Apple", "Zebra"};
+        ArrayBag arrayBag = new ArrayBag<String>();
+        LinkedBag linkedBag = new LinkedBag<String>();
+
+        // Setting arrayBag
+        arrayBag.setTheBag(arrayBagVal);
+
+        // Setting linkedBag
+        for(int i = 0; i < linkedBagVal.length; i++)
+        {
+            linkedBag.add(linkedBagVal[i]);
+        }
+
+        //Printing out both arrays
+        System.out.println(arrayBag.toaArray().toString());
+
+
     }
 }
