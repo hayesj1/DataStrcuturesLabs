@@ -4,7 +4,7 @@
  */
 public class LinkedBag<T> implements IBag<T> {
 
-    private int size;
+    private int size = 0;
     private Node firstNode;
 
     public LinkedBag() { this(null); }
@@ -71,17 +71,32 @@ public class LinkedBag<T> implements IBag<T> {
 
     @Override
     public boolean contains(T item) {
-        return false;
+        boolean found = false;
+        Node node = firstNode;
+        for (int i = 0; i < size ; i++, node = node.nextNode) {
+            if (node.getData().equals(item)) { found = true; }
+        }
+        return found;
     }
 
     @Override
     public int getFrequencyOf(T item) {
-        return 0;
+        int count = 0;
+        Node node = firstNode;
+        for (int i = 0; i < size ; i++, node = node.nextNode) {
+            if (node.getData().equals(item)) { count++; }
+        }
+        return count;
     }
 
     @Override
     public T[] toaArray() {
-        return ((T[]) new Object[0]);
+        T[] array = (T[]) new Object[size];
+        Node node = firstNode;
+        for (int i = 0; i < size ; i++, node = node.nextNode) {
+            array[i] = node.getData();
+        }
+        return array;
     }
 
     protected class Node {

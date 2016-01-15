@@ -4,12 +4,13 @@
  *
  *
  * Created by hayesj3 on 1/8/2016.
+ * @author Christian //TODO add last name, and check spelling of first name
  * @author Karen Camaso
  * @author Jacob Hayes
  */
 public class Lab2 {
 
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        //TODO write a est program!
     }
 }
