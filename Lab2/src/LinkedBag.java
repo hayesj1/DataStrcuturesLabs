@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * Created by hayesj3 on 1/14/2016.
  * @author Jacob Hayes
@@ -135,6 +137,44 @@ public class LinkedBag<T> implements IBag<T> {
         }
 
         return true;
+    }
+    public LinkedBag<T> union(LinkedBag<T> firstBag, LinkedBag<T> secondBag) {
+        LinkedBag<T> combinedBag = new LinkedBag<>();
+
+        T[] firstArray = ( T[] ) firstBag.toaArray();
+        T[] secondArray = ( T[] ) secondBag.toaArray();
+
+        for(int i = 0; i < firstArray.length; i++){
+            combinedBag.add(firstArray[i]);
+        }
+        for (int i = 0; i < secondArray.length; i++) {
+            combinedBag.add(secondArray[i]);
+        }
+        return combinedBag;
+    }
+
+    public LinkedBag<T> intersection(LinkedBag<T> firstBag, LinkedBag<T> secondBag) {
+        int combinedSize = firstBag.getCurrentSize() + secondBag.getCurrentSize();
+        LinkedBag<T> combinedBag = new LinkedBag<>();
+
+        T[] firstBagS = ( T[] ) firstBag.toaArray();
+        Arrays.sort(firstBagS);
+
+        T[] secondBagS = ( T[] ) secondBag.toaArray();
+        Arrays.sort(secondBagS);
+
+        T item;
+        int count = 0;
+        int pos = 0;
+        for (int i = 0; i < firstBagS.length; i += firstBag.getFrequencyOf(item)) {
+            item = firstBagS[i];
+            count = Math.min(firstBag.getFrequencyOf(item), secondBag.getFrequencyOf(item));
+
+            for (int j = 0; j < count; j++, pos++) {
+                combinedBag.add(item);
+            }
+        }
+        return combinedBag;
     }
 
     public Node getFirstNode() { return this.firstNode; }
