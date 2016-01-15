@@ -29,6 +29,25 @@ public class Lab2 {
         //Printing out both arrays
         System.out.println(arrayBag.toaArray().toString());
 
+        //setting up stuff
+        ResizableArrayBag<String> firstBag = new ResizableArrayBag<>(5);
+        ResizableArrayBag<String> secondBag = new ResizableArrayBag<>(3);
+
+        firstBag.add("Hi");
+        firstBag.add("Ni hao");
+        firstBag.add("Konichiwa");
+        firstBag.add("I don't know how to say hello in any more languages");
+        firstBag.add("INSERT_TEXT_HERE");
+        secondBag.add("Goodbye");
+        secondBag.add("Hi");
+        secondBag.add("Ni hao");
+
+        //testing
+        ResizableArrayBag<String> thirdBag = new ResizableArrayBag<String>().intersection(firstBag, secondBag);
+        ResizableArrayBag<String> fourthBag = new ResizableArrayBag<String >().union(firstBag, secondBag);
+
+        System.out.println(thirdBag.toaArray().toString());
+        System.out.println(fourthBag.toaArray().toString());
 
     }
 }
