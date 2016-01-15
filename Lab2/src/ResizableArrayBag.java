@@ -46,5 +46,29 @@ public class ResizableArrayBag<T> extends ArrayBag {
         }
 
         return false;
+
     }
+    public ResizableArrayBag<T> union(ResizableArrayBag<T> firstBag, ResizableArrayBag<T> secondBag) {
+        ResizableArrayBag<T> combinedBag = new ResizableArrayBag<>(firstBag.getCurrentSize() + secondBag.getCurrentSize());
+        for(int i = 0; i < firstBag.getCurrentSize(); i++){
+            combinedBag.add(firstBag.theBag[i]);
+        }
+        for (int i = 0; i < secondBag.getCurrentSize(); i++) {
+            combinedBag.add(secondBag.theBag[i]);
+        }
+        return combinedBag;
+    }
+
+    public ResizableArrayBag<T> intersection(ResizableArrayBag<T> firstBag, ResizableArrayBag<T> secondBag) {
+        ResizableArrayBag<T> combinedBag = new ResizableArrayBag<>(firstBag.getCurrentSize() + secondBag.getCurrentSize());
+        for(int i = 0; i < firstBag.getCurrentSize(); i++) {
+            if(firstBag.contains(secondBag.theBag[i])){
+                combinedBag.add(secondBag.theBag[i]);
+            }
+
+        }
+        return combinedBag;
+    }
+
+
 }
