@@ -1,4 +1,0 @@
-If you encounter errors running the code, open command-prompt(or equivalent),
-navigate to the folder where src.zip was extracted, complie the soruce files then execute the following:
-
-java com.jacob_hayes.Driver

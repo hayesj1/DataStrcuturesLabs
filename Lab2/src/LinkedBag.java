@@ -23,22 +23,50 @@ public class LinkedBag<T> implements IBag<T> {
 
     @Override
     public boolean add(T item) {
-        return false;
+        Node newItem = new Node(item, firstNode);
+        firstNode = newItem;
+        size++;
+        return true;
     }
 
     @Override
     public boolean remove(T item) {
+        Node previousNode = null;
+        Node node = firstNode;
+        do {
+            if (node.getData().equals(item)) {
+                if (node == firstNode) {
+                    firstNode = firstNode.getNextNode();
+                } else {
+                    previousNode.setNextNode(node.nextNode);
+                    node = null;
+                }
+                return true;
+            }
+
+            previousNode = node;
+            node = node.nextNode;
+        } while(node != null);
         return false;
     }
 
     @Override
     public T remove() {
-        return null;
+        T item = firstNode.getData();
+        firstNode = firstNode.nextNode;
+        return item;
     }
 
     @Override
     public void clear() {
-
+        Node node = firstNode;
+        Node tempNode = firstNode.nextNode;
+        for (int i = 0; i < size -1; i++) {
+            node = null;
+            node = tempNode;
+            tempNode = node.nextNode;
+        }
+        firstNode = null;
     }
 
     @Override
