@@ -131,6 +131,6 @@ public class ArrayBag<T> implements IBag<T> {
         return (size >= theBag.length);
     }
 
-    public T[] getTheBag() { return theBag; }
+    public T[] getTheBag() { return Arrays.copyOf(theBag, theBag.length); }
     public void setTheBag(T[] newBag) { this.theBag = newBag; }
 }
