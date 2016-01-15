@@ -93,20 +93,37 @@ public class ArrayBag<T> implements IBag<T> {
     public boolean equals(Object obj) {
         if(obj == null) return false;
         if(this == obj) return true;
-        ArrayBag<? extends T> other = null;
+
+        ArrayBag<T> other = null;
         if(obj instanceof ArrayBag) {
-            other = (ArrayBag<? extends T>) obj;
+            other = (ArrayBag<T>) obj;
             if( other == null) { return false; }
         } else {
             return false;
         }
         T[] thisBag = this.getTheBag();
         T[] otherBag = other.getTheBag();
-        for (int i = 0; i < thisBag.length; i++) {
-            for (int j = 0; j < otherBag.length; j++) {
 
+        T thisItem;
+        T otherItem;
+
+        for (int i = 0; i < thisBag.length; i++) {
+            thisItem = thisBag[i];
+            if (!other.contains(thisItem)) {
+                return false;
+            } else if (this.getFrequencyOf(thisItem) != other.getFrequencyOf(thisItem)) {
+                return false;
             }
         }
+        for (int i = 0; i < otherBag.length; i++) {
+            otherItem = otherBag[i];
+            if(!this.contains(otherItem)) {
+                return false;
+            } else if (this.getFrequencyOf(otherItem) != other.getFrequencyOf(otherItem)) {
+                return false;
+            }
+        }
+
         return true;
     }
 

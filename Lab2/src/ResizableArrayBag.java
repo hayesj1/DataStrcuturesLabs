@@ -30,6 +30,21 @@ public class ResizableArrayBag<T> extends ArrayBag {
 
     @Override
     protected boolean isFull() {
-        return (getSize() >= capacity);
+        return (getCurrentSize() >= capacity);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof ResizableArrayBag) {
+            ResizableArrayBag<T> other = (ResizableArrayBag<T>) obj;
+
+            if (this.getCurrentSize() != other.getCurrentSize()) {
+                return false;
+            } else {
+                return super.equals(obj);
+            }
+        }
+
+        return false;
     }
 }

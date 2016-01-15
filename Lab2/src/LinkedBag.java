@@ -99,6 +99,46 @@ public class LinkedBag<T> implements IBag<T> {
         return array;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) return false;
+        if(this == obj) return true;
+
+        LinkedBag<T> other = null;
+        if(obj instanceof LinkedBag) {
+            other = (LinkedBag<T>) obj;
+            if( other == null) { return false; }
+        } else {
+            return false;
+        }
+        Node thisNode = this.getFirstNode();
+        Node otherNode = other.getFirstNode();
+
+        T thisItem;
+        T otherItem;
+
+        for (int i = 0; i < this.getCurrentSize(); i++, thisNode = thisNode.getNextNode()) {
+            thisItem = thisNode.getData();
+            if (!other.contains(thisItem)) {
+                return false;
+            } else if (this.getFrequencyOf(thisItem) != other.getFrequencyOf(thisItem)) {
+                return false;
+            }
+        }
+        for (int i = 0; i < other.getCurrentSize(); i++, otherNode = otherNode.getNextNode()) {
+            otherItem = otherNode.getData();
+            if(!this.contains(otherItem)) {
+                return false;
+            } else if (this.getFrequencyOf(otherItem) != other.getFrequencyOf(otherItem)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public Node getFirstNode() { return this.firstNode; }
+
     protected class Node {
         private T data;
         private Node nextNode;
