@@ -1,10 +1,10 @@
 /**
  *
- * Group Members: Karen Camaso, Jacob Hayes
+ * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
  *
  *
  * Created by hayesj3 on 1/8/2016.
- * @author Christian //TODO add last name, and check spelling of first name
+ * @author Christian Abate-Wong
  * @author Karen Camaso
  * @author Jacob Hayes
  */
