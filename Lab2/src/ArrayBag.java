@@ -36,6 +36,7 @@ public class ArrayBag<T> implements IBag<T> {
 
     @Override
     public boolean remove(T item) {
+        if(size == 0) { return false; }
         T lastItem = theBag[size-1];
         for(T obj : theBag) {
             if(obj == null) {
@@ -55,6 +56,7 @@ public class ArrayBag<T> implements IBag<T> {
 
     @Override
     public T remove() {
+        if(size == 0) { return null; }
         T removed = theBag[size-1];
         theBag[size-1] = null;
         return removed;
@@ -142,5 +144,8 @@ public class ArrayBag<T> implements IBag<T> {
     }
 
     public T[] getTheBag() { return Arrays.copyOf(theBag, theBag.length); }
-    public void setTheBag(T[] newBag) { this.theBag = newBag; }
+    public void setTheBag(T[] newBag) {
+        this.size = newBag.length;
+        this.theBag = newBag;
+    }
 }

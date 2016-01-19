@@ -79,7 +79,7 @@ public class ResizableArrayBag<T> extends ArrayBag {
         T item;
         int count = 0;
         int pos = 0;
-        for (int i = 0; i < firstBagS.length; i += firstBag.getFrequencyOf(item)) {
+        for (int i = 0; i < firstBagS.length && i < secondBagS.length; i += firstBag.getFrequencyOf(item)) {
             item = firstBagS[i];
             count = Math.min(firstBag.getFrequencyOf(item), secondBag.getFrequencyOf(item));
 
