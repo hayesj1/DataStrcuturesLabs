@@ -8,6 +8,9 @@
  * @author Karen Camaso
  * @author Jacob Hayes
  */
+
+import java.util.Arrays;
+
 public class Lab2 {
 
     public static void main(String[] args)
@@ -27,7 +30,11 @@ public class Lab2 {
         }
 
         //Printing out both arrays
-        System.out.println(arrayBag.toaArray().toString());
+        System.out.println("Printing out Arrays using toaArray():");
+        System.out.println(Arrays.toString(arrayBag.toaArray()) + "\n" +
+                Arrays.toString(linkedBag.toaArray()));
+
+
 
         //setting up stuff
         ResizableArrayBag<String> firstBag = new ResizableArrayBag<>(5);
@@ -43,12 +50,12 @@ public class Lab2 {
         secondBag.add("Ni hao");
         secondBag.add("Shalom");
 
-        //testing
+        /*testing -- TODO, BUG-FIX, NullPOinterException when calling ResizableArray
         ResizableArrayBag<String> thirdBag = new ResizableArrayBag<String>().intersection(firstBag, secondBag);
         ResizableArrayBag<String> fourthBag = new ResizableArrayBag<String >().union(firstBag, secondBag);
 
         System.out.println(thirdBag.toaArray().toString());
         System.out.println(fourthBag.toaArray().toString());
-
+    */
     }
 }
