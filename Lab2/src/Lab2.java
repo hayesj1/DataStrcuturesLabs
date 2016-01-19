@@ -32,7 +32,7 @@ public class Lab2 {
 
         //setting up stuff
         ResizableArrayBag<String> firstBag = new ResizableArrayBag<>(5);
-        ResizableArrayBag<String> secondBag = new ResizableArrayBag<>(3);
+        ResizableArrayBag<String> secondBag = new ResizableArrayBag<>(5);
 
         firstBag.add("Hi");
         firstBag.add("Ni hao");
