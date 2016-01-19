@@ -6,7 +6,7 @@ import java.util.Arrays;
  */
 public class ArrayBag<T> implements IBag<T> {
 
-    protected static final int DEFAULT_CAPACITY = 25;
+    protected static final int DEFAULT_CAPACITY = 5;
 
     protected T[] theBag;
     private int size;
@@ -125,6 +125,16 @@ public class ArrayBag<T> implements IBag<T> {
         }
 
         return true;
+    }
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        str.append("The bag contains: ");
+        for (int i = 0; i < theBag.length-1; i++) {
+            str.append(theBag[i] + ", ");
+        }
+        str.append(theBag[theBag.length-1]);
+        return str.toString();
     }
 
     protected boolean isFull() {

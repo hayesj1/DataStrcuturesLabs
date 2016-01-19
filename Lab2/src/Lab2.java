@@ -27,7 +27,8 @@ public class Lab2 {
         }
 
         //Printing out both arrays
-        System.out.println(arrayBag.toaArray().toString());
+        System.out.println(arrayBag.toString());
+        System.out.println(linkedBag.toString());
 
         //setting up stuff
         ResizableArrayBag<String> firstBag = new ResizableArrayBag<>(5);
@@ -42,13 +43,14 @@ public class Lab2 {
         secondBag.add("Hi");
         secondBag.add("Ni hao");
         secondBag.add("Shalom");
+        secondBag.add("Aloha");
 
         //testing
         ResizableArrayBag<String> thirdBag = new ResizableArrayBag<String>().intersection(firstBag, secondBag);
         ResizableArrayBag<String> fourthBag = new ResizableArrayBag<String >().union(firstBag, secondBag);
 
-        System.out.println(thirdBag.toaArray().toString());
-        System.out.println(fourthBag.toaArray().toString());
+        System.out.println(thirdBag.toString());
+        System.out.println(fourthBag.toString());
 
     }
 }

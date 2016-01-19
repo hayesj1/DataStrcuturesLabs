@@ -138,6 +138,18 @@ public class LinkedBag<T> implements IBag<T> {
 
         return true;
     }
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        Node n;
+        str.append("The bag contains: ");
+        for (n = firstNode; n.getNextNode() != null; n = n.getNextNode()) {
+            str.append(n.getData().toString() + ", ");
+        }
+        str.append(n.getData().toString());
+        return str.toString();
+    }
+
     public LinkedBag<T> union(LinkedBag<T> firstBag, LinkedBag<T> secondBag) {
         LinkedBag<T> combinedBag = new LinkedBag<>();
 
