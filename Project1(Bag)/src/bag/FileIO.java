@@ -1,28 +1,51 @@
 package bag;
 import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
  * Created by camasok on 1/21/2016.
  */
-public class FileIO
+public class FileIO implements Runnable
 {
     public LinkedBag<String> dicBag = new LinkedBag<>();
 
-    public void parseFile(String filename)
-    {
+    private int count = 0;
+    public FileIO() {
+        parseFile();
+    }
 
-       Scanner n = null;
+    public LinkedBag getDictionary() { return new LinkedBag().fromArray(Arrays.copyOf(this.dicBag.toArray(), this.dicBag.getCurrentSize())); }
+
+    public void parseFile()
+    {
+        // TODO add dictionary.txt as a hardcoded filepath
+        String temp = "Dictionary.txt";
+
+       Scanner s = null;
         try {
-            n = new Scanner(new BufferedReader((new FileReader(filename))));
+            s = new Scanner(new File(temp));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        if (n != null) {
-            while(n.hasNext())
+        if (s != null) {
+            while(s.hasNext())
             {
-                dicBag.add(n.next());
+                dicBag.add(s.next());
+                count++;
             }
         }
+    }
+
+    @Override
+    public void run() {
+        do {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(".  ");
+        } while(this.count <= 98500);
     }
 }
