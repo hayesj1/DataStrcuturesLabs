@@ -49,69 +49,35 @@ public class ResizableArrayBag<T> extends ArrayBag {
         return false;
 
     }
-    public static ResizableArrayBag union(ResizableArrayBag firstBag, ResizableArrayBag secondBag) {
-        /*
-        int combinedSize = firstBag.getCurrentSize() + secondBag.getCurrentSize();
+    public ResizableArrayBag union(ResizableArrayBag otherBag) {
+        int combinedSize = this.getCurrentSize() + otherBag.getCurrentSize();
         ResizableArrayBag<T> combinedBag = new ResizableArrayBag<>(combinedSize);
 
-        T[] firstArray = ( T[] ) firstBag.getTheBag();
-        T[] secondArray = ( T[] ) secondBag.getTheBag();
-
-        for(int i = 0; i < firstArray.length; i++){
-            combinedBag.add(firstArray[i]);
+        for(int i = 0; i < this.getCurrentSize(); i++){
+            combinedBag.add(this.theBag[i]);
         }
-        for (int i = 0; i < secondArray.length; i++) {
-            combinedBag.add(secondArray[i]);
-        }
-        return combinedBag;
-        */
-
-        ResizableArrayBag combinedBag = new ResizableArrayBag<>(firstBag.getCurrentSize() + secondBag.getCurrentSize());
-        for(int i = 0; i < firstBag.getCurrentSize(); i++){
-            combinedBag.add(firstBag.theBag[i]);
-        }
-        for (int i = 0; i < secondBag.getCurrentSize(); i++) {
-            combinedBag.add(secondBag.theBag[i]);
+        for (int i = 0; i < otherBag.getCurrentSize(); i++) {
+            combinedBag.add(otherBag.theBag[i]);
         }
         return combinedBag;
 
     }
 
-    public static ResizableArrayBag intersection(ResizableArrayBag firstBag, ResizableArrayBag secondBag) {
-        /*
-        int combinedSize = firstBag.getCurrentSize() + secondBag.getCurrentSize();
+    public ResizableArrayBag intersection(ResizableArrayBag otherBag) {
+
+        int combinedSize = this.getCurrentSize() + otherBag.getCurrentSize();
         ResizableArrayBag combinedBag = new ResizableArrayBag<>(combinedSize);
-
-
-        T[] combinedArray = (T[]) new Object[combinedSize];
-
-        T[] firstBagS = ( T[] ) firstBag.getTheBag();
-        Arrays.sort(firstBagS);
-
-        T[] secondBagS = ( T[] ) secondBag.getTheBag();
-        Arrays.sort(secondBagS);
-
-        T item;
-
 
         int count = 0;
         int pos = 0;
-        for (int i = 0; i < firstBagS.length && i < secondBagS.length; i += firstBag.getFrequencyOf(item)) {
-            item = firstBagS[i];
-            count = Math.min(firstBag.getFrequencyOf(item), secondBag.getFrequencyOf(item));
+        T item;
+
+        for(int i = 0; i < this.getCurrentSize() && i < otherBag.getCurrentSize(); i+=pos) {
+            item = (T) this.getTheBag()[pos];
+            count = Math.min(this.getFrequencyOf(item), otherBag.getFrequencyOf(item));
 
             for (int j = 0; j < count; j++, pos++) {
-                combinedArray[pos] = item;
-            }
-        }
-        combinedBag.setTheBag(combinedArray);
-        return combinedBag;
-        */
-
-        ResizableArrayBag combinedBag = new ResizableArrayBag<>(firstBag.getCurrentSize() + secondBag.getCurrentSize());
-        for(int i = 0; i < firstBag.getCurrentSize(); i++) {
-            if(firstBag.contains(secondBag.theBag[i])){
-                combinedBag.add(secondBag.theBag[i]);
+                combinedBag.add(this.getTheBag()[i]);
             }
 
         }

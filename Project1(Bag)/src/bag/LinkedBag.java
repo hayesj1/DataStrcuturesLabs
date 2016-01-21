@@ -75,7 +75,7 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
 
     @Override
     public T remove() {
-        T removed = first.getData();
+        T removed = (T) first.getData();
         first = first.getNext();
         return removed;
     }
@@ -110,9 +110,25 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
         T[] array = (T[]) new Object[size];
         Node n = first;
         for(int i = 0; i < size; i++, n=n.getNext()) {
-            array[i] = n.getData();
+            array[i] = (T) n.getData();
         }
         return array;
+    }
+
+    public LinkedBag intersection(LinkedBag otherBag) {
+        LinkedBag combinedBag = new LinkedBag<>();
+
+        Node n = this.getFirstNode();
+        int count = 0;
+        int pos = 0;
+        for (;n != null; n=n.getNext()) {
+            count = Math.min(this.getFrequencyOf(n.getData()), otherBag.getFrequencyOf(n.getData()));
+
+            for (int j = 0; j < count; j++, pos++) {
+                combinedBag.add(n.getData());
+            }
+        }
+        return combinedBag;
     }
 
     public LinkedBag<T> fromArray(T[] items) {
@@ -135,22 +151,8 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
         return super.toString();
     }
 
-    class Node {
-        T data = null;
-        Node next = null;
-
-        public Node(T data) { this(data, null); }
-        public Node(T data, Node next) {
-            this.data = data;
-            this.next = next;
-        }
-
-        public T getData() { return data; }
-        public void setData(T data) { this.data = data; }
-
-        public Node getNext() { return next; }
-        public void setNext(Node next) { this.next = next; }
-    }
+    public Node getFirstNode() { return first; }
+    public void setFirstNode(Node first) { this.first = first; }
 
     public static void main(String[] args) {
         BagTester<String> testStr = new BagTester<>();
@@ -165,5 +167,21 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
         System.out.println("Starting LinkedBag<Integer> Test");
         testInt.startTest(new Integer[] {1, 2, 3, 100, 200, 300});
         System.out.println("Completed LinkedBag<Integer> Test");
+    }
+    class Node {
+        private T data = null;
+        private Node next = null;
+
+        public Node(T data) { this(data, null); }
+        public Node(T data, Node next) {
+            this.data = data;
+            this.next = next;
+        }
+
+        public T getData() { return data; }
+        public void setData(T data) { this.data = data; }
+
+        public Node getNext() { return next; }
+        public void setNext(Node next) { this.next = next; }
     }
 }
