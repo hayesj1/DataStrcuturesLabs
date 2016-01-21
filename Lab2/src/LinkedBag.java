@@ -23,8 +23,7 @@ public class LinkedBag<T extends Object> implements IBag<T> {
 
     @Override
     public boolean add(T item) {
-        Node newItem = new Node(item, firstNode);
-        firstNode = newItem;
+        firstNode = new Node(item, firstNode);
         size++;
         return true;
     }
@@ -148,25 +147,28 @@ public class LinkedBag<T extends Object> implements IBag<T> {
         return str.toString();
     }
 
-    public static LinkedBag union(LinkedBag firstBag, LinkedBag secondBag) {
-        LinkedBag combinedBag = new LinkedBag<>();
-        for(Node n = firstBag.firstNode; n != null; n=n.getNextNode()){
+    public LinkedBag union(LinkedBag otherBag) {
+        LinkedBag<T> combinedBag = new LinkedBag<>();
+        for(Node n = this.firstNode; n != null; n=n.getNextNode()){
             combinedBag.add(n.getData());
         }
-        for (Node n = secondBag.firstNode; n != null; n=n.getNextNode()) {
+        for (Node n = otherBag.firstNode; n != null; n=n.getNextNode()) {
             combinedBag.add(n.getData());
         }
         return combinedBag;
     }
 
-    public static LinkedBag intersection(LinkedBag firstBag, LinkedBag secondBag) {
-        LinkedBag combinedBag = new LinkedBag<>();
+    public LinkedBag intersection(LinkedBag otherBag) {
+        LinkedBag<T> combinedBag = new LinkedBag<>();
 
-        Node n = firstBag.getFirstNode();
+        Node n = this.getFirstNode();
         int count = 0;
         int pos = 0;
-        for (;n != null; n=n.getNextNode()) {
-            count = Math.min(firstBag.getFrequencyOf(n.getData()), secondBag.getFrequencyOf(n.getData()));
+        for (int i = 0;n != null; i+=pos) {
+            for (int j = 0; j < i; j++) {
+                n=n.getNextNode();
+            }
+            count = Math.min(this.getFrequencyOf(n.getData()), otherBag.getFrequencyOf(n.getData()));
 
             for (int j = 0; j < count; j++, pos++) {
                 combinedBag.add(n.getData());
@@ -175,21 +177,21 @@ public class LinkedBag<T extends Object> implements IBag<T> {
         return combinedBag;
     }
     public Node getFirstNode() { return this.firstNode; }
-}
 
-class Node<T> {
-    private T data;
-    private Node nextNode;
+    class Node {
+        private T data;
+        private Node nextNode;
 
-    Node(T data) { this(data, null); }
-    Node(T data, Node nextNode) {
-        this.data = data;
-        this.nextNode = nextNode;
+        Node(T data) { this(data, null); }
+        Node(T data, Node nextNode) {
+            this.data = data;
+            this.nextNode = nextNode;
+        }
+
+        public T getData() { return data; }
+        public Node getNextNode() { return nextNode; }
+
+        public void setData(T data) { this.data = data; }
+        public void setNextNode(Node nextNode) { this.nextNode = nextNode; }
     }
-
-    public T getData() { return data; }
-    public Node getNextNode() { return nextNode; }
-
-    public void setData(T data) { this.data = data; }
-    public void setNextNode(Node nextNode) { this.nextNode = nextNode; }
 }
