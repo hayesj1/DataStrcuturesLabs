@@ -1,22 +1,26 @@
 package bag;
 import java.io.*;
-import java.io.Scanner;
+import java.util.Scanner;
 
 /**
  * Created by camasok on 1/21/2016.
  */
 public class FileIO
 {
-    public dicBag = new LinkedBag<T>()
+    public LinkedBag<String> dicBag = new LinkedBag<>();
 
-    public boolean parseFile(String filename)
+    public void parseFile(String filename)
     {
-       Scanner n = null;
 
-        n = new Scanner(new BufferedReader((new FileReader(filename))));
+       Scanner n = null;
+        try {
+            n = new Scanner(new BufferedReader((new FileReader(filename))));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         while(n.hasNext())
         {
-            dicBag.add(n);
+            dicBag.add(n.next());
         }
     }
 }

@@ -44,7 +44,7 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
 
     @Override
     public boolean isEmpty() {
-        return (size <= 0 ? true : false);
+        return (size <= 0);
     }
 
     @Override
