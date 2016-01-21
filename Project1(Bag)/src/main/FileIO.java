@@ -1,4 +1,6 @@
-package bag;
+package main;
+import bag.LinkedBag;
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -20,7 +22,7 @@ public class FileIO implements Runnable
     public void parseFile()
     {
         // TODO add dictionary.txt as a hardcoded filepath
-        String temp = "Dictionary.txt";
+        String temp = "dictionary.txt";
 
        Scanner s = null;
         try {
