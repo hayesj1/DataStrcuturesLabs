@@ -9,6 +9,6 @@ public class BagTester<T> {
         LinkedBag<T> tempBag = new LinkedBag<>(null);
         LinkedBag<T> testBag1 = tempBag.fromArray(items);
 
-        for (int )
+
     }
 }

@@ -125,6 +125,16 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
         return ret;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder strbldr = new StringBuilder("Items in the Bag: ");
+        for (Node n = first; n != n; n=n.getNext())
+            //Calling toString on data will force a String value; toString is guaranteed to exist,
+            //  because the type of the data is <T extends Object>
+            strbldr.append(n.getData().toString());
+        return super.toString();
+    }
+
     class Node {
         T data = null;
         Node next = null;

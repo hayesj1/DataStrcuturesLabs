@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 /**
  * Created by hayesj3 on 1/14/2016.
  * @author Jacob Hayes
@@ -40,33 +38,33 @@ public class LinkedBag<T extends Object> implements IBag<T> {
                 if (node == firstNode) {
                     firstNode = firstNode.getNextNode();
                 } else {
-                    previousNode.setNextNode(node.nextNode);
+                    previousNode.setNextNode(node.getNextNode());
                     node = null;
                 }
                 return true;
             }
 
             previousNode = node;
-            node = node.nextNode;
+            node = node.getNextNode();
         } while(node != null);
         return false;
     }
 
     @Override
     public T remove() {
-        T item = firstNode.getData();
-        firstNode = firstNode.nextNode;
+        T item = (T) firstNode.getData();
+        firstNode = firstNode.getNextNode();
         return item;
     }
 
     @Override
     public void clear() {
         Node node = firstNode;
-        Node tempNode = firstNode.nextNode;
+        Node tempNode = firstNode.getNextNode();
         for (int i = 0; i < size -1; i++) {
             node = null;
             node = tempNode;
-            tempNode = node.nextNode;
+            tempNode = node.getNextNode();
         }
         firstNode = null;
     }
@@ -75,7 +73,7 @@ public class LinkedBag<T extends Object> implements IBag<T> {
     public boolean contains(T item) {
         boolean found = false;
         Node node = firstNode;
-        for (int i = 0; i < size ; i++, node = node.nextNode) {
+        for (int i = 0; i < size ; i++, node = node.getNextNode()) {
             if (node.getData().equals(item)) { found = true; }
         }
         return found;
@@ -85,7 +83,7 @@ public class LinkedBag<T extends Object> implements IBag<T> {
     public int getFrequencyOf(T item) {
         int count = 0;
         Node node = firstNode;
-        for (int i = 0; i < size ; i++, node = node.nextNode) {
+        for (int i = 0; i < size ; i++, node = node.getNextNode()) {
             if (node.getData().equals(item)) { count++; }
         }
         return count;
@@ -95,8 +93,8 @@ public class LinkedBag<T extends Object> implements IBag<T> {
     public T[] toaArray() {
         T[] array = (T[]) new Object[size];
         Node node = firstNode;
-        for (int i = 0; i < size ; i++, node = node.nextNode) {
-            array[i] = node.getData();
+        for (int i = 0; i < size ; i++, node = node.getNextNode()) {
+            array[i] = (T) node.getData();
         }
         return array;
     }
@@ -120,7 +118,7 @@ public class LinkedBag<T extends Object> implements IBag<T> {
         T otherItem;
 
         for (int i = 0; i < this.getCurrentSize(); i++, thisNode = thisNode.getNextNode()) {
-            thisItem = thisNode.getData();
+            thisItem = (T) thisNode.getData();
             if (!other.contains(thisItem)) {
                 return false;
             } else if (this.getFrequencyOf(thisItem) != other.getFrequencyOf(thisItem)) {
@@ -128,7 +126,7 @@ public class LinkedBag<T extends Object> implements IBag<T> {
             }
         }
         for (int i = 0; i < other.getCurrentSize(); i++, otherNode = otherNode.getNextNode()) {
-            otherItem = otherNode.getData();
+            otherItem = (T) otherNode.getData();
             if(!this.contains(otherItem)) {
                 return false;
             } else if (this.getFrequencyOf(otherItem) != other.getFrequencyOf(otherItem)) {
@@ -150,61 +148,48 @@ public class LinkedBag<T extends Object> implements IBag<T> {
         return str.toString();
     }
 
-    public LinkedBag<T> union(LinkedBag<T> firstBag, LinkedBag<T> secondBag) {
-        LinkedBag<T> combinedBag = new LinkedBag<>();
-
-        T[] firstArray = ( T[] ) firstBag.toaArray();
-        T[] secondArray = ( T[] ) secondBag.toaArray();
-
-        for(int i = 0; i < firstArray.length; i++){
-            combinedBag.add(firstArray[i]);
+    public static LinkedBag union(LinkedBag firstBag, LinkedBag secondBag) {
+        LinkedBag combinedBag = new LinkedBag<>();
+        for(Node n = firstBag.firstNode; n != null; n=n.getNextNode()){
+            combinedBag.add(n.getData());
         }
-        for (int i = 0; i < secondArray.length; i++) {
-            combinedBag.add(secondArray[i]);
+        for (Node n = secondBag.firstNode; n != null; n=n.getNextNode()) {
+            combinedBag.add(n.getData());
         }
         return combinedBag;
     }
 
-    public LinkedBag<T> intersection(LinkedBag<T> firstBag, LinkedBag<T> secondBag) {
-        int combinedSize = firstBag.getCurrentSize() + secondBag.getCurrentSize();
-        LinkedBag<T> combinedBag = new LinkedBag<>();
+    public static LinkedBag intersection(LinkedBag firstBag, LinkedBag secondBag) {
+        LinkedBag combinedBag = new LinkedBag<>();
 
-        T[] firstBagS = ( T[] ) firstBag.toaArray();
-        Arrays.sort(firstBagS);
-
-        T[] secondBagS = ( T[] ) secondBag.toaArray();
-        Arrays.sort(secondBagS);
-
-        T item;
+        Node n = firstBag.getFirstNode();
         int count = 0;
         int pos = 0;
-        for (int i = 0; i < firstBagS.length; i += firstBag.getFrequencyOf(item)) {
-            item = firstBagS[i];
-            count = Math.min(firstBag.getFrequencyOf(item), secondBag.getFrequencyOf(item));
+        for (;n != null; n=n.getNextNode()) {
+            count = Math.min(firstBag.getFrequencyOf(n.getData()), secondBag.getFrequencyOf(n.getData()));
 
             for (int j = 0; j < count; j++, pos++) {
-                combinedBag.add(item);
+                combinedBag.add(n.getData());
             }
         }
         return combinedBag;
     }
-
     public Node getFirstNode() { return this.firstNode; }
+}
 
-    protected class Node {
-        private T data;
-        private Node nextNode;
+class Node<T> {
+    private T data;
+    private Node nextNode;
 
-        Node(T data) { this(data, null); }
-        Node(T data, Node nextNode) {
-            this.data = data;
-            this.nextNode = nextNode;
-        }
-
-        public T getData() { return data; }
-        public Node getNextNode() { return nextNode; }
-
-        public void setData(T data) { this.data = data; }
-        public void setNextNode(Node nextNode) { this.nextNode = nextNode; }
+    Node(T data) { this(data, null); }
+    Node(T data, Node nextNode) {
+        this.data = data;
+        this.nextNode = nextNode;
     }
+
+    public T getData() { return data; }
+    public Node getNextNode() { return nextNode; }
+
+    public void setData(T data) { this.data = data; }
+    public void setNextNode(Node nextNode) { this.nextNode = nextNode; }
 }
