@@ -26,7 +26,7 @@ public class Lab2 {
             linkedBag.add(linkedBagVal[i]);
         }
 
-        //Printing out both arrays
+        //Printing out both arrays, testing toString()
         System.out.println(arrayBag.toString());
         System.out.println(linkedBag.toString());
 
