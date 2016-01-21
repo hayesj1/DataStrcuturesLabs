@@ -4,7 +4,7 @@ import java.util.Arrays;
  * Created by hayesj3 on 1/14/2016.
  * @author Jacob Hayes
  */
-public class LinkedBag<T> implements IBag<T> {
+public class LinkedBag<T extends Object> implements IBag<T> {
 
     private int size = 0;
     private Node firstNode;

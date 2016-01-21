@@ -4,7 +4,7 @@ import java.util.Arrays;
  * Created by hayesj3 on 1/14/2016.
  * @author Jacob Hayes
  */
-public class ArrayBag<T> implements IBag<T> {
+public class ArrayBag<T extends Object> implements IBag<T> {
 
     protected static final int DEFAULT_CAPACITY = 5;
 
@@ -133,9 +133,9 @@ public class ArrayBag<T> implements IBag<T> {
         StringBuilder str = new StringBuilder();
         str.append("The bag contains: ");
         for (int i = 0; i < theBag.length-1; i++) {
-            str.append(theBag[i] + ", ");
+            str.append(theBag[i].toString() + ", ");
         }
-        str.append(theBag[theBag.length-1]);
+        str.append(theBag[theBag.length-1].toString());
         return str.toString();
     }
 

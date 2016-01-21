@@ -5,7 +5,7 @@ import java.util.Arrays;
  * @author Jacob Hayes
  * @author Christian Abate-Wong
  */
-public class ResizableArrayBag<T> extends ArrayBag {
+public class ResizableArrayBag<T extends Object> extends ArrayBag {
 
     private int capacity;
 
@@ -49,6 +49,54 @@ public class ResizableArrayBag<T> extends ArrayBag {
         return false;
 
     }
+
+    public ResizableArrayBag<T> union(ResizableArrayBag<T> otherBag) {
+        int combinedSize = this.getCurrentSize() + otherBag.getCurrentSize();
+        ResizableArrayBag<T> combinedBag = new ResizableArrayBag<>(combinedSize);
+
+        T[] firstArray = ( T[] ) this.getTheBag();
+        T[] secondArray = ( T[] ) otherBag.getTheBag();
+
+        for(int i = 0; i < firstArray.length; i++){
+            combinedBag.add(firstArray[i]);
+        }
+        for (int i = 0; i < secondArray.length; i++) {
+            combinedBag.add(secondArray[i]);
+        }
+        return combinedBag;
+    }
+    public ResizableArrayBag<T> intersection(ResizableArrayBag<T> otherBag) {
+        int combinedSize = this.getCurrentSize() + otherBag.getCurrentSize();
+        ResizableArrayBag<T> combinedBag = new ResizableArrayBag<>(combinedSize);
+        T[] combinedArray = (T[]) new Object[combinedSize];
+
+        T[] firstBagS = ( T[] ) this.getTheBag();
+        Arrays.sort(firstBagS);
+
+        T[] secondBagS = ( T[] ) otherBag.getTheBag();
+        Arrays.sort(secondBagS);
+
+        T item;
+        int count = 0;
+        int pos = 0;
+        for (int i = 0; i < firstBagS.length && i < secondBagS.length; i += this.getFrequencyOf(item)) {
+            item = firstBagS[i];
+            count = Math.min(this.getFrequencyOf(item), otherBag.getFrequencyOf(item));
+
+            for (int j = 0; j < count; j++, pos++) {
+                combinedArray[pos] = item;
+            }
+        }
+        combinedBag.setTheBag(combinedArray);
+        return combinedBag;
+    }
+
+    /**
+     * @deprecated found to be an incorrect implementation
+     * @param firstBag
+     * @param secondBag
+     * @return a bag of the unionized paramaters
+     */
     public ResizableArrayBag<T> union(ResizableArrayBag<T> firstBag, ResizableArrayBag<T> secondBag) {
         int combinedSize = firstBag.getCurrentSize() + secondBag.getCurrentSize();
         ResizableArrayBag<T> combinedBag = new ResizableArrayBag<>(combinedSize);
@@ -65,6 +113,12 @@ public class ResizableArrayBag<T> extends ArrayBag {
         return combinedBag;
     }
 
+    /**
+     * @deprecated found to be an incorrect implementation
+     * @param firstBag
+     * @param secondBag
+     * @return a bag of the intersected paramaters
+     */
     public ResizableArrayBag<T> intersection(ResizableArrayBag<T> firstBag, ResizableArrayBag<T> secondBag) {
         int combinedSize = firstBag.getCurrentSize() + secondBag.getCurrentSize();
         ResizableArrayBag<T> combinedBag = new ResizableArrayBag<>(combinedSize);

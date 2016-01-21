@@ -75,8 +75,8 @@ public class Lab2 {
         System.out.println("linkedBag = " + linkedBag);
 
 
-
-        //Setting up stuff
+        //Testing intersecton() and union()
+        //Setting up bags
         ResizableArrayBag<String> firstBag = new ResizableArrayBag<>(5);
         ResizableArrayBag<String> secondBag = new ResizableArrayBag<>(5);
 
@@ -91,12 +91,15 @@ public class Lab2 {
         secondBag.add("Shalom");
         secondBag.add("Aloha");
 
-        //testing
-        ResizableArrayBag<String> thirdBag = new ResizableArrayBag<String>().intersection(firstBag, secondBag);
-        ResizableArrayBag<String> fourthBag = new ResizableArrayBag<String >().union(firstBag, secondBag);
+        //intersection()
+        ResizableArrayBag<String> thirdBag = firstBag.intersection(secondBag);
+        ResizableArrayBag<String> fourthBag = secondBag.intersection(firstBag);
+        System.out.println("Intersections equal: " + thirdBag.equals(fourthBag));
 
-        System.out.println(thirdBag);
-        System.out.println(fourthBag);
+        //union()
+        thirdBag = firstBag.union(secondBag);
+        fourthBag = secondBag.union(firstBag);
+        System.out.println("Unions equal: " + thirdBag.equals(fourthBag));
 
     }
 }
