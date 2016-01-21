@@ -18,9 +18,11 @@ public class FileIO
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        while(n.hasNext())
-        {
-            dicBag.add(n.next());
+        if (n != null) {
+            while(n.hasNext())
+            {
+                dicBag.add(n.next());
+            }
         }
     }
 }
