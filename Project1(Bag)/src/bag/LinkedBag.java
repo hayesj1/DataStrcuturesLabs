@@ -115,6 +115,16 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
         return array;
     }
 
+    public LinkedBag<T> fromArray(T[] items) {
+        LinkedBag<T> ret = new LinkedBag<>(null);
+
+        for (int i = 0; i < items.length; i++) {
+            ret.add(items[i]);
+        }
+
+        return ret;
+    }
+
     class Node {
         T data = null;
         Node next = null;
@@ -130,5 +140,20 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
 
         public Node getNext() { return next; }
         public void setNext(Node next) { this.next = next; }
+    }
+
+    public static void main(String[] args) {
+        BagTester<String> testStr = new BagTester<>();
+        BagTester<Integer> testInt = new BagTester<>();
+
+        System.out.println("Starting LinkedBag<T> Test");
+
+        System.out.println("Starting LinkedBag<String> Test");
+        testStr.startTest(new String[] {"Apples", "Oranges", "Bananas", "Kiwi", "Pomegranate", "Pear"});
+        System.out.println("Completed LinkedBag<String> Test");
+
+        System.out.println("Starting LinkedBag<Integer> Test");
+        testInt.startTest(new Integer[] {1, 2, 3, 100, 200, 300});
+        System.out.println("Completed LinkedBag<Integer> Test");
     }
 }

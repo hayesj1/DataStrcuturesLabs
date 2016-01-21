@@ -5,7 +5,13 @@ package main;
  */
 public class Project1Bag {
 
+    public Project1Bag() {
+        //main code
+    }
+
     public static void main(String[] args) {
         System.out.println("Hello World!");
+
+        Project1Bag main = new Project1Bag();
     }
 }
