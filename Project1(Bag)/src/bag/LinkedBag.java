@@ -131,24 +131,21 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
         return combinedBag;
     }
 
-    public LinkedBag<T> fromArray(T[] items) {
-        LinkedBag<T> ret = new LinkedBag<>(null);
-
+    public void fromArray(T[] items) {
+        this.clear();
         for (int i = 0; i < items.length; i++) {
-            ret.add(items[i]);
+            this.add(items[i]);
         }
-
-        return ret;
     }
 
     @Override
     public String toString() {
-        StringBuilder strbldr = new StringBuilder("Items in the Bag: ");
+        StringBuilder strbldr = new StringBuilder("");
         for (Node n = first; n != n; n=n.getNext())
-            //Calling toString on data will force a String value; toString is guaranteed to exist,
-            //  because the type of the data is <T extends Object>
+            //Calling toString on data will force a String value; toString() is guaranteed to exist,
+            //  at least in its un-overriden form, because the type of the data is <T extends Object>
             strbldr.append(n.getData().toString());
-        return super.toString();
+        return strbldr.toString();
     }
 
     public Node getFirstNode() { return first; }
@@ -164,6 +161,7 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
         testStr.startTest(new String[] {"Apples", "Oranges", "Bananas", "Kiwi", "Pomegranate", "Pear"});
         System.out.println("Completed LinkedBag<String> Test");
 
+        // Auto-Boxing makes this possible
         System.out.println("Starting LinkedBag<Integer> Test");
         testInt.startTest(new Integer[] {1, 2, 3, 100, 200, 300});
         System.out.println("Completed LinkedBag<Integer> Test");

@@ -6,9 +6,10 @@ package bag;
 public class BagTester<T> {
 
     public void startTest(T[] items) {
-        LinkedBag<T> tempBag = new LinkedBag<>(null);
-        LinkedBag<T> testBag1 = tempBag.fromArray(items);
+        LinkedBag<T> testBag = new LinkedBag<>(null);
+        testBag.fromArray(items);
 
-        //for();
+        System.out.println("Size: " + testBag.getCurrentSize());
+        System.out.println("Contents: " + testBag);
     }
 }

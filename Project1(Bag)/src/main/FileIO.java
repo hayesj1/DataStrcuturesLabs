@@ -17,7 +17,11 @@ public class FileIO implements Runnable
         parseFile();
     }
 
-    public LinkedBag getDictionary() { return new LinkedBag().fromArray(Arrays.copyOf(this.dicBag.toArray(), this.dicBag.getCurrentSize())); }
+    public LinkedBag getDictionary() {
+        LinkedBag<String> ret = new LinkedBag<>();
+        ret.fromArray(Arrays.copyOf(this.dicBag.toArray(), this.dicBag.getCurrentSize()));
+        return ret;
+    }
 
     public void parseFile()
     {
