@@ -1,7 +1,11 @@
 package main;
+
 import bag.LinkedBag;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -23,15 +27,19 @@ public class FileIO implements Runnable
         return ret;
     }
 
-    public void parseFile()
+    public boolean parseFile()
     {
         // TODO add dictionary.txt as a hardcoded filepath
-        String temp = "dictionary.txt";
-
-       Scanner s = null;
+        URL temp = this.getClass().getResource("/dictionary");
+        if (temp == null) {
+            return false;
+        }
+        Scanner s = null;
         try {
-            s = new Scanner(new File(temp));
+            s = new Scanner(new File(temp.toURI()));
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         if (s != null) {
@@ -41,6 +49,7 @@ public class FileIO implements Runnable
                 count++;
             }
         }
+        return true;
     }
 
     @Override

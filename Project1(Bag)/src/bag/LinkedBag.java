@@ -116,21 +116,40 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
     }
 
     public LinkedBag intersection(LinkedBag otherBag) {
-        LinkedBag combinedBag = new LinkedBag<>();
+        LinkedBag<T> combinedBag = new LinkedBag<>();
 
         Node n = this.getFirstNode();
+        T item = null;
         int count = 0;
         int pos = 0;
         for (;n != null; n=n.getNext()) {
-            count = Math.min(this.getFrequencyOf(n.getData()), otherBag.getFrequencyOf(n.getData()));
+            item = n.getData();
+            count = Math.min(this.getFrequencyOf(item), otherBag.getFrequencyOf(item));
 
             for (int j = 0; j < count; j++, pos++) {
-                combinedBag.add(n.getData());
+                combinedBag.add(item);
             }
         }
         return combinedBag;
     }
+    public LinkedBag inverseIntersection(LinkedBag intersectedBag) {
+        LinkedBag<T> combinedBag = new LinkedBag<>();
 
+        Node n = this.getFirstNode();
+        T item = null;
+        int count = 0;
+        int pos = 0;
+        for (;n != null; n=n.getNext()) {
+            item = n.getData();
+            int temp = this.getFrequencyOf(item) - intersectedBag.getFrequencyOf(item);
+            count = (temp >0 ? temp : 0);
+
+            for (int j = 0; j < count; j++, pos++) {
+                combinedBag.add(item);
+            }
+        }
+        return combinedBag;
+    }
     public void fromArray(T[] items) {
         this.clear();
         for (int i = 0; i < items.length; i++) {
