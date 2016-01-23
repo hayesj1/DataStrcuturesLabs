@@ -115,14 +115,24 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
         return array;
     }
 
+    public LinkedBag union(LinkedBag otherBag) {
+        LinkedBag<T> combinedBag = new LinkedBag<>();
+        for(Node n = this.getFirstNode(); n != null; n=n.getNext()){
+            combinedBag.add(n.getData());
+        }
+        for (Node n = otherBag.getFirstNode(); n != null; n=n.getNext()) {
+            combinedBag.add(n.getData());
+        }
+        return combinedBag;
+    }
+
     public LinkedBag intersection(LinkedBag otherBag) {
         LinkedBag<T> combinedBag = new LinkedBag<>();
 
-        Node n = this.getFirstNode();
         T item = null;
         int count = 0;
         int pos = 0;
-        for (;n != null; n=n.getNext()) {
+        for (Node n = this.getFirstNode(); n != null; n=n.getNext()) {
             item = n.getData();
             count = Math.min(this.getFrequencyOf(item), otherBag.getFrequencyOf(item));
 
@@ -132,17 +142,23 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
         }
         return combinedBag;
     }
-    public LinkedBag inverseIntersection(LinkedBag intersectedBag) {
-        LinkedBag<T> combinedBag = new LinkedBag<>();
 
-        Node n = this.getFirstNode();
+    /**
+     * Obtains all items in <code>this</code> but not in <code>otherBag</code>, and EXCLUDING the items
+     * in <code>otherBag</code> but not in <code>this</code>.
+     * @param otherBag the bag to intersect with <code>this</code>
+     * @return a LinkedBag contains all items in <code>this</code> but not in <code>otherBag</code>
+     */
+    public LinkedBag inverseIntersection(LinkedBag otherBag) {
+        LinkedBag<T> combinedBag = new LinkedBag<>();
+        LinkedBag<T> intersectedBag = this.intersection(otherBag);
+
         T item = null;
         int count = 0;
         int pos = 0;
-        for (;n != null; n=n.getNext()) {
+        for (Node n = this.getFirstNode(); n != null; n=n.getNext()) {
             item = n.getData();
-            int temp = this.getFrequencyOf(item) - intersectedBag.getFrequencyOf(item);
-            count = (temp >0 ? temp : 0);
+            count = this.getFrequencyOf(item) - intersectedBag.getFrequencyOf(item);
 
             for (int j = 0; j < count; j++, pos++) {
                 combinedBag.add(item);
@@ -177,12 +193,12 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
         System.out.println("Starting LinkedBag<T> Test");
 
         System.out.println("Starting LinkedBag<String> Test");
-        testStr.startTest(new String[] {"Apples", "Oranges", "Bananas", "Kiwi", "Pomegranate", "Pear"});
+        testStr.startTest(new String[] {"Apples", "Oranges", "Bananas", "Kiwi", "Pomegranate", "Pear"}, "string");
         System.out.println("Completed LinkedBag<String> Test");
 
         // Auto-Boxing makes this possible
         System.out.println("Starting LinkedBag<Integer> Test");
-        testInt.startTest(new Integer[] {1, 2, 3, 100, 200, 300});
+        testInt.startTest(new Integer[] {1, 2, 3, 100, 200, 300}, "integer");
         System.out.println("Completed LinkedBag<Integer> Test");
     }
     class Node {

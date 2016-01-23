@@ -149,10 +149,10 @@ public class LinkedBag<T extends Object> implements IBag<T> {
 
     public LinkedBag union(LinkedBag otherBag) {
         LinkedBag<T> combinedBag = new LinkedBag<>();
-        for(Node n = this.firstNode; n != null; n=n.getNextNode()){
+        for(Node n = this.getFirstNode(); n != null; n=n.getNextNode()){
             combinedBag.add(n.getData());
         }
-        for (Node n = otherBag.firstNode; n != null; n=n.getNextNode()) {
+        for (Node n = otherBag.getFirstNode(); n != null; n=n.getNextNode()) {
             combinedBag.add(n.getData());
         }
         return combinedBag;

@@ -34,6 +34,8 @@ public class Project1Bag {
 
         userWords.fromArray(words);
         checkWords();
+        System.out.println("Correctly spelled words: " + correctWords);
+        System.out.println("Incorrectly spelled words: " + incorrectWords);
     }
 
     private String[] getUserWords() throws FileNotFoundException {
@@ -54,7 +56,7 @@ public class Project1Bag {
     }
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        System.out.println("Welcome to the Optimus Spell Checker!!");
 
         Project1Bag main = new Project1Bag();
     }

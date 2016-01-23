@@ -16,7 +16,7 @@ public class FileIO implements Runnable
 {
     public LinkedBag<String> dicBag = new LinkedBag<>();
 
-    private int count = 0;
+    private boolean cont = true;
     public FileIO() {
         parseFile();
     }
@@ -29,7 +29,6 @@ public class FileIO implements Runnable
 
     public boolean parseFile()
     {
-        // TODO add dictionary.txt as a hardcoded filepath
         URL temp = this.getClass().getResource("/dictionary");
         if (temp == null) {
             return false;
@@ -43,24 +42,33 @@ public class FileIO implements Runnable
             e.printStackTrace();
         }
         if (s != null) {
+            System.out.println("Beginning dictionary load process");
+            Thread thread = new Thread(this);
+            thread.run();
             while(s.hasNext())
             {
                 dicBag.add(s.next());
-                count++;
             }
+            cont = false;
+            System.out.println("Dictionary load process completed successfully!");
         }
         return true;
     }
 
     @Override
     public void run() {
+        int counter = 0;
         do {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println(".  ");
-        } while(this.count <= 98500);
+            System.out.print(". .  ");
+            counter++;
+            if((counter % 10) == 0) {
+                System.out.println();
+            }
+        } while(this.cont);
     }
 }
