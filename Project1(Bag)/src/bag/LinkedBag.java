@@ -94,11 +94,11 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
     @Override
     public int getFrequencyOf(T item) {
         int freq = 0;
-        int firstPos = search(item);
-        Node n = first;
+        int firstPos = this.search(item);
+        Node n = this.getFirstNode();
         if(firstPos != -1) {
-            for (int i = 0; i <= firstPos; i++, n=n.getNext());
-            for (int i = firstPos; i < (size-firstPos); i++, n=n.getNext()) {
+            for (int i = 0; i < firstPos; i++, n=n.getNext());
+            for (int i = firstPos; n != null && i < size; i++, n=n.getNext()) {
                 if(n.getData().equals(item)) { freq++; }
             }
         }
@@ -126,19 +126,24 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
         return combinedBag;
     }
 
-    public LinkedBag intersection(LinkedBag otherBag) {
+    public LinkedBag intersection(LinkedBag<T> otherBag) {
         LinkedBag<T> combinedBag = new LinkedBag<>();
 
         T item = null;
         int count = 0;
-        int pos = 0;
+        int skip = 0;
         for (Node n = this.getFirstNode(); n != null; n=n.getNext()) {
             item = n.getData();
+            skip = 0;
+            if(!otherBag.contains(item)) { continue; }
             count = Math.min(this.getFrequencyOf(item), otherBag.getFrequencyOf(item));
 
-            for (int j = 0; j < count; j++, pos++) {
+            for (int j = 0; j < count; j++) {
                 combinedBag.add(item);
             }
+
+            skip = this.getFrequencyOf(item) - count;
+            for (int i = 0; i < skip; i++, n= n.getNext());
         }
         return combinedBag;
     }
@@ -155,12 +160,11 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
 
         T item = null;
         int count = 0;
-        int pos = 0;
         for (Node n = this.getFirstNode(); n != null; n=n.getNext()) {
             item = n.getData();
             count = this.getFrequencyOf(item) - intersectedBag.getFrequencyOf(item);
 
-            for (int j = 0; j < count; j++, pos++) {
+            for (int j = 0; j < count; j++) {
                 combinedBag.add(item);
             }
         }
@@ -176,10 +180,10 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
     @Override
     public String toString() {
         StringBuilder strbldr = new StringBuilder("");
-        for (Node n = first; n != n; n=n.getNext())
+        for (Node n = getFirstNode(); n != null; n=n.getNext())
             //Calling toString on data will force a String value; toString() is guaranteed to exist,
             //  at least in its un-overriden form, because the type of the data is <T extends Object>
-            strbldr.append(n.getData().toString());
+            strbldr.append(n.getData().toString() + " ");
         return strbldr.toString();
     }
 
@@ -201,7 +205,7 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
         testInt.startTest(new Integer[] {1, 2, 3, 100, 200, 300}, "integer");
         System.out.println("Completed LinkedBag<Integer> Test");
     }
-    class Node {
+    public class Node {
         private T data = null;
         private Node next = null;
 

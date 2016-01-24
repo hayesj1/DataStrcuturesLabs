@@ -12,18 +12,17 @@ import java.util.Scanner;
 /**
  * Created by camasok on 1/21/2016.
  */
-public class FileIO implements Runnable
+public class FileIO
 {
     public LinkedBag<String> dicBag = new LinkedBag<>();
 
     private boolean cont = true;
-    public FileIO() {
-        parseFile();
-    }
+    public FileIO() {}
 
     public LinkedBag getDictionary() {
         LinkedBag<String> ret = new LinkedBag<>();
         ret.fromArray(Arrays.copyOf(this.dicBag.toArray(), this.dicBag.getCurrentSize()));
+        //ret = dicBag;
         return ret;
     }
 
@@ -43,32 +42,15 @@ public class FileIO implements Runnable
         }
         if (s != null) {
             System.out.println("Beginning dictionary load process");
-            Thread thread = new Thread(this);
-            thread.run();
             while(s.hasNext())
             {
-                dicBag.add(s.next());
+                synchronized (this) {
+                    dicBag.add(s.next());
+                }
             }
             cont = false;
             System.out.println("Dictionary load process completed successfully!");
         }
         return true;
-    }
-
-    @Override
-    public void run() {
-        int counter = 0;
-        do {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.print(". .  ");
-            counter++;
-            if((counter % 10) == 0) {
-                System.out.println();
-            }
-        } while(this.cont);
     }
 }
