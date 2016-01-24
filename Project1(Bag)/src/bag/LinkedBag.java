@@ -3,7 +3,14 @@ package bag;
 import BagUtil.BagInterface;
 
 /**
+ *
+ * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
+ *
+ *
  * Created by hayesj3 on 1/21/2016.
+ * @author Christian Abate-Wong
+ * @author Karen Camaso
+ * @author Jacob Hayes
  */
 public class LinkedBag<T extends Object> implements BagInterface<T> {
 
@@ -75,7 +82,7 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
 
     @Override
     public T remove() {
-        T removed = (T) first.getData();
+        T removed = first.getData();
         first = first.getNext();
         return removed;
     }
@@ -110,7 +117,7 @@ public class LinkedBag<T extends Object> implements BagInterface<T> {
         T[] array = (T[]) new Object[size];
         Node n = first;
         for(int i = 0; i < size; i++, n=n.getNext()) {
-            array[i] = (T) n.getData();
+            array[i] = n.getData();
         }
         return array;
     }

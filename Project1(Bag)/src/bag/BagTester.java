@@ -1,7 +1,12 @@
 package bag;
 
 /**
+ *
+ * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
+ *
+ *
  * Created by hayesj3 on 1/21/2016.
+ * @author Jacob Hayes
  */
 public class BagTester<T extends Object> {
 

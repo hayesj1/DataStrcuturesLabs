@@ -8,9 +8,15 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Scanner;
-
 /**
+ *
+ * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
+ *
+ *
  * Created by camasok on 1/21/2016.
+ * @author Christian Abate-Wong
+ * @author Karen Camaso
+ * @author Jacob Hayes
  */
 public class FileIO
 {
