@@ -42,7 +42,7 @@ public class Project1Bag {
         System.out.println("Enter the absolute path to the file containing the words to be checked:\n");
         String text;
 
-        try (BufferedReader fr = new BufferedReader(new FileReader(input.nextLine()));){
+        try (BufferedReader fr = new BufferedReader(new FileReader(input.nextLine()))){
             while ((text = fr.readLine()) != null) {
                 words.add(text);
             }
@@ -59,7 +59,6 @@ public class Project1Bag {
 
     public static void main(String[] args) {
         System.out.println("Welcome to the " + projectName + "!!");
-        // Default path to user's words: words.txt
         Project1Bag main = new Project1Bag();
     }
 }
