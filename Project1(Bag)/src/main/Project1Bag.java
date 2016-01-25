@@ -20,6 +20,7 @@ import java.util.Scanner;
 public class Project1Bag {
 
     public static final String projectName = "Optimus Spell Checker";
+
     private LinkedBag<String> dict = null;
     private LinkedBag<String> userWords = new LinkedBag<>();
     private LinkedBag<String> correctWords = new LinkedBag<>();
