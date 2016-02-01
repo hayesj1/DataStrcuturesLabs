@@ -57,6 +57,7 @@ public class FileIO
             cont = false;
             System.out.println("Dictionary load process completed successfully!");
         }
+        s.close();
         return true;
     }
 }
