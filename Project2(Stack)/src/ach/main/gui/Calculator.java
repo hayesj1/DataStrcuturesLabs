@@ -3,7 +3,7 @@ package ach.main.gui;
 import ach.stack.ArrayStack;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
+import java.awt.*;
 
 /**
  * Created by hayesj3 on 2/1/2016.
@@ -34,35 +34,22 @@ public class Calculator extends JFrame {
 	private JButton button8;
 	private JButton button9;
 
+	private void createUIComponents() {
+		//background = new JPanel();
+	}
+
 	public enum EnumCharacters { number, operator, openingParan, closingParan }
 
-	public Calculator() throws BadLocationException {
-		buttonQuit.addActionListener(e -> quit());
-		buttonClear.addActionListener(e -> output.setText(""));
-		buttonBack.addActionListener(e -> output.setText(output.getText().substring(0, output.getText().length()-1)));
+	public Calculator() {
+		this.setTitle("Optimus Calculator");
+		this.setPreferredSize(new Dimension(300, 300));
+		this.setSize(300, 300);
 
-		buttonDiv.addActionListener(e -> output.append("/"));
-		buttonMult.addActionListener(e -> output.append("*"));
-		buttonSub.addActionListener(e -> output.append("-"));
-		buttonAdd.addActionListener(e -> output.append("+"));
-		buttonEqual.addActionListener(e -> parse(toPostFix(output.getText())));
-
-		buttonOpenParan.addActionListener(e -> output.append("("));
-		buttonCloseParan.addActionListener(e -> output.append(")"));
-
-		button0.addActionListener(e -> output.append("0"));
-		button1.addActionListener(e -> output.append("1"));
-		button2.addActionListener(e -> output.append("2"));
-		button3.addActionListener(e -> output.append("3"));
-		button4.addActionListener(e -> output.append("4"));
-		button5.addActionListener(e -> output.append("5"));
-		button6.addActionListener(e -> output.append("6"));
-		button7.addActionListener(e -> output.append("7"));
-		button8.addActionListener(e -> output.append("8"));
-		button9.addActionListener(e -> output.append("9"));
+		addActionListners();
+		this.add(background);
 
 		this.pack();
-		this.setVisible(true);
+		//this.setVisible(true);
 	}
 
 	private String toPostFix(String infix) {
@@ -73,7 +60,7 @@ public class Calculator extends JFrame {
 		Operator opN = null;
 		Operator opS = null;
 		while (pos < infix.length()) {
-			Character next = new Character(infix.charAt(pos));
+			Character next = new Character(infix.charAt(pos++));
 			if (Character.isDigit(next)) {
 				state = EnumCharacters.number;
 			} else if (next.charValue() == '+' || next.charValue() == '-') {
@@ -81,10 +68,10 @@ public class Calculator extends JFrame {
 				opN = new Operator((next.charValue() == '+' ? '+' : '-'), Operator.PrecedenceStates.AddSub);
 			} else if (next.charValue() == '*' || next.charValue() == '/') {
 				state = EnumCharacters.operator;
-				opN = new Operator((next.charValue() == '*' ? '+' : '/'), Operator.PrecedenceStates.MultDiv);
+				opN = new Operator((next.charValue() == '*' ? '*' : '/'), Operator.PrecedenceStates.MultDiv);
 			} else if (next.charValue() == '(') {
 				state = EnumCharacters.openingParan;
-			} else if (next.charValue() == '(') {
+			} else if (next.charValue() == ')') {
 				state = EnumCharacters.closingParan;
 			} else {
 				state = null;
@@ -92,23 +79,27 @@ public class Calculator extends JFrame {
 			switch (state)
 			{
 				case number:
-					ret.append(next);
+					ret.append(next.charValue());
 					break;
 				case operator :
-					char ch = operatorStack.peek();
-					opS = new Operator(ch, (ch == '+' || ch == '-' ? Operator.PrecedenceStates.AddSub : Operator.PrecedenceStates.MultDiv));
-					while (!operatorStack.isEmpty() && (opN.getState().ordinal() <= opS.getState().ordinal())) {
-						ret.append(ch);
-						operatorStack.pop();
+					if(!operatorStack.isEmpty()) {
+						char ch = operatorStack.peek();
+						opS = new Operator(ch, (ch == '+' || ch == '-' ? Operator.PrecedenceStates.AddSub : Operator.PrecedenceStates.MultDiv));
+						while (!operatorStack.isEmpty() && (opN.getState().ordinal() <= opS.getState().ordinal())) {
+							if(ch == '(') { break; }
+							ret.append(ch);
+							ch = operatorStack.pop();
+							opS = new Operator(ch, (ch == '+' || ch == '-' ? Operator.PrecedenceStates.AddSub : Operator.PrecedenceStates.MultDiv));
+						}
 					}
-				operatorStack.push(next);
-				break;
+					operatorStack.push(next);
+					break;
 				case openingParan:
 					operatorStack.push(next);
 					break;
-				case closingParan: // the stack is not empty
+				case closingParan:
 					Character topOperator = operatorStack.pop();
-					while (topOperator.charValue() != '(')
+					while (!operatorStack.isEmpty() && topOperator.charValue() != '(')
 					{
 						ret.append(topOperator);
 						topOperator = operatorStack.pop();
@@ -128,55 +119,41 @@ public class Calculator extends JFrame {
 	}
 
 	private int parse(String postFix) {
-		int temp = 0;
 		int result = 0;
 		int pos = 0;
-		Character operand1, operand2, operator;
+		int operand1, operand2;
+		char ch;
 
-		ArrayStack<Character> stack = new ArrayStack<>();
+		ArrayStack<Integer> stack = new ArrayStack<>();
 		while (pos < postFix.length()) {
-			while (!isOperator(postFix.charAt(pos))) {
-				stack.push(postFix.charAt(pos));
-				pos++;
+			ch = postFix.charAt(pos);
+			while (Character.isDigit(ch)) {
+				stack.push(Character.getNumericValue(ch));
+				ch = postFix.charAt(++pos);
 			}
-			operand2 = stack.pop();
 			operand1 = stack.pop();
-			operator = postFix.charAt(pos++);
-			switch (operator) {
+			operand2 = stack.pop();
+
+			switch (ch) {
 				case '+':
-					temp = Integer.valueOf(operand1) + Integer.valueOf(operand2);
+					result = operand1 + operand2;
 					break;
 				case '-':
-					temp = Integer.valueOf(operand1) - Integer.valueOf(operand2);
+					result = operand1 - operand2;
 					break;
 				case '*':
-					temp = Integer.valueOf(operand1) * Integer.valueOf(operand2);
+					result = operand1 * operand2;
 					break;
 				case '/':
-					temp = Integer.valueOf(operand1) / Integer.valueOf(operand2);
+					result = operand1 / operand2;
 					break;
 			}
-			while (pos < postFix.length() && isOperator(postFix.charAt(pos))) {
-				operator = postFix.charAt(pos++);
-				switch (operator) {
-					case '+':
-						temp += stack.pop();
-						break;
-					case '-':
-						temp -= stack.pop();
-						break;
-					case '*':
-						temp *= stack.pop();
-						break;
-					case '/':
-						temp /= stack.pop();
-						break;
-				}
-			}
+			stack.push(result);
+			pos++;
 		}
 
 
-		return temp;
+		return result;
 	}
 
 	private boolean isOperator(char ch) {
@@ -184,8 +161,35 @@ public class Calculator extends JFrame {
 	}
 	private void quit() {
 		this.dispose();
-
+		System.out.println("Thanks for using the Optimus Calculator! Goodbye!");
 	}
+
+	private void addActionListners() {
+		buttonQuit.addActionListener(e -> quit());
+		buttonClear.addActionListener(e -> output.setText(""));
+		buttonBack.addActionListener(e -> output.setText(output.getText().substring(0, output.getText().length()-1)));
+
+		buttonDiv.addActionListener(e -> output.append("/"));
+		buttonMult.addActionListener(e -> output.append("*"));
+		buttonSub.addActionListener(e -> output.append("-"));
+		buttonAdd.addActionListener(e -> output.append("+"));
+		buttonEqual.addActionListener(e -> output.setText(String.valueOf(parse(toPostFix(output.getText())))));
+
+		buttonOpenParan.addActionListener(e -> output.append("("));
+		buttonCloseParan.addActionListener(e -> output.append(")"));
+
+		button0.addActionListener(e -> output.append("0"));
+		button1.addActionListener(e -> output.append("1"));
+		button2.addActionListener(e -> output.append("2"));
+		button3.addActionListener(e -> output.append("3"));
+		button4.addActionListener(e -> output.append("4"));
+		button5.addActionListener(e -> output.append("5"));
+		button6.addActionListener(e -> output.append("6"));
+		button7.addActionListener(e -> output.append("7"));
+		button8.addActionListener(e -> output.append("8"));
+		button9.addActionListener(e -> output.append("9"));
+	}
+
 }
 class Operator {
 

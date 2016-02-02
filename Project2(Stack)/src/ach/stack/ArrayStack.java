@@ -41,8 +41,10 @@ public class ArrayStack<T> implements IStack<T> {
 	@Override
 	public T pop() {
 		if(isEmpty()) { throw new EmptyStackException(); }
-		T entry = this.bottom;
-		this.bottom = this.entries[this.entries.length - --pos];
+		T entry = this.entries[this.entries.length - pos];
+		pos--;
+		if(isEmpty()) { this.bottom = null; }
+		else { this.bottom = this.entries[this.entries.length - pos]; }
 		return entry;
 	}
 
@@ -54,7 +56,7 @@ public class ArrayStack<T> implements IStack<T> {
 
 	@Override
 	public boolean isEmpty() {
-		return (this.pos == 0) ? true : false;
+		return (this.pos < 1) ? true : false;
 	}
 
 	@Override
