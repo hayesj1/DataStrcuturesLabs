@@ -56,7 +56,7 @@ public class ArrayStack<T> implements IStack<T> {
 
 	@Override
 	public boolean isEmpty() {
-		return (this.pos < 1) ? true : false;
+		return (this.pos < 1);
 	}
 
 	@Override

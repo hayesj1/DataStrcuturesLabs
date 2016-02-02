@@ -4,6 +4,8 @@ import ach.stack.ArrayStack;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 /**
  * Created by hayesj3 on 2/1/2016.
@@ -34,10 +36,6 @@ public class Calculator extends JFrame {
 	private JButton button8;
 	private JButton button9;
 
-	private void createUIComponents() {
-		//background = new JPanel();
-	}
-
 	public enum EnumCharacters { number, operator, openingParan, closingParan }
 
 	public Calculator() {
@@ -45,11 +43,55 @@ public class Calculator extends JFrame {
 		this.setPreferredSize(new Dimension(300, 300));
 		this.setSize(300, 300);
 
+		KeyAdapter kl = new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				switch(e.getKeyCode()) {
+					case KeyEvent.VK_0:
+					case KeyEvent.VK_1:
+					case KeyEvent.VK_2:
+					case KeyEvent.VK_3:
+					case KeyEvent.VK_4:
+					case KeyEvent.VK_5:
+					case KeyEvent.VK_6:
+					case KeyEvent.VK_7:
+					case KeyEvent.VK_8:
+					case KeyEvent.VK_9:
+					case KeyEvent.VK_LEFT_PARENTHESIS:
+					case KeyEvent.VK_RIGHT_PARENTHESIS:
+					case KeyEvent.VK_MINUS:
+					case KeyEvent.VK_ASTERISK:
+					case KeyEvent.VK_SLASH:
+						handleChar(String.valueOf(e.getKeyChar()));
+						break;
+					case KeyEvent.VK_EQUALS:
+						if(e.isShiftDown()) {
+							handleChar("+");
+						} else {
+							handleEquals();
+						}
+						break;
+					case KeyEvent.VK_Q:
+						handleQuit();
+						break;
+					case KeyEvent.VK_C:
+						handleClear();
+						break;
+					case KeyEvent.VK_BACK_SPACE:
+						handleBackspace();
+						break;
+					default:
+						break;
+				}
+			}
+
+		};
+
 		addActionListners();
+		output.addKeyListener(kl);
 		this.add(background);
 
 		this.pack();
-		//this.setVisible(true);
 	}
 
 	private String toPostFix(String infix) {
@@ -131,8 +173,8 @@ public class Calculator extends JFrame {
 				stack.push(Character.getNumericValue(ch));
 				ch = postFix.charAt(++pos);
 			}
-			operand1 = stack.pop();
 			operand2 = stack.pop();
+			operand1 = stack.pop();
 
 			switch (ch) {
 				case '+':
@@ -159,35 +201,57 @@ public class Calculator extends JFrame {
 	private boolean isOperator(char ch) {
 		return (ch == '+' || ch == '-' || ch == '*' ||ch == '/');
 	}
-	private void quit() {
-		this.dispose();
-		System.out.println("Thanks for using the Optimus Calculator! Goodbye!");
+
+	private void handleQuit() {
+		quit();
+	}
+	private void handleClear() {
+		output.setText("");
+	}
+	private void handleBackspace() {
+		String str = output.getText().substring(0, output.getText().length()-1);
+		output.setText(str);
+	}
+	private void handleEquals() {
+		String postFix = toPostFix(output.getText());
+		int result = parse(postFix);
+		output.setText(String.valueOf(result));
+	}
+	private void handleChar(String ch) {
+		output.append(ch);
 	}
 
 	private void addActionListners() {
-		buttonQuit.addActionListener(e -> quit());
-		buttonClear.addActionListener(e -> output.setText(""));
-		buttonBack.addActionListener(e -> output.setText(output.getText().substring(0, output.getText().length()-1)));
+		buttonQuit.addActionListener(e -> handleQuit());
+		buttonClear.addActionListener(e -> handleClear());
+		buttonBack.addActionListener(e -> handleBackspace());
 
-		buttonDiv.addActionListener(e -> output.append("/"));
-		buttonMult.addActionListener(e -> output.append("*"));
-		buttonSub.addActionListener(e -> output.append("-"));
-		buttonAdd.addActionListener(e -> output.append("+"));
-		buttonEqual.addActionListener(e -> output.setText(String.valueOf(parse(toPostFix(output.getText())))));
+		buttonEqual.addActionListener(e -> handleEquals());
+		buttonDiv.addActionListener(e -> handleChar("/"));
+		buttonMult.addActionListener(e -> handleChar("*"));
+		buttonSub.addActionListener(e -> handleChar("-"));
+		buttonAdd.addActionListener(e -> handleChar("+"));
 
-		buttonOpenParan.addActionListener(e -> output.append("("));
-		buttonCloseParan.addActionListener(e -> output.append(")"));
 
-		button0.addActionListener(e -> output.append("0"));
-		button1.addActionListener(e -> output.append("1"));
-		button2.addActionListener(e -> output.append("2"));
-		button3.addActionListener(e -> output.append("3"));
-		button4.addActionListener(e -> output.append("4"));
-		button5.addActionListener(e -> output.append("5"));
-		button6.addActionListener(e -> output.append("6"));
-		button7.addActionListener(e -> output.append("7"));
-		button8.addActionListener(e -> output.append("8"));
-		button9.addActionListener(e -> output.append("9"));
+		buttonOpenParan.addActionListener(e -> handleChar("("));
+		buttonCloseParan.addActionListener(e -> handleChar(")"));
+
+		button0.addActionListener(e -> handleChar("0"));
+		button1.addActionListener(e -> handleChar("1"));
+		button2.addActionListener(e -> handleChar("2"));
+		button3.addActionListener(e -> handleChar("3"));
+		button4.addActionListener(e -> handleChar("4"));
+		button5.addActionListener(e -> handleChar("5"));
+		button6.addActionListener(e -> handleChar("6"));
+		button7.addActionListener(e -> handleChar("7"));
+		button8.addActionListener(e -> handleChar("8"));
+		button9.addActionListener(e -> handleChar("9"));
+	}
+
+	void quit() {
+		this.dispose();
+		System.out.println("Thanks for using the Optimus Calculator! Goodbye!");
+		System.exit(0);
 	}
 
 }
