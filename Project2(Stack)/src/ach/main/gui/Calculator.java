@@ -64,6 +64,7 @@ public class Calculator extends JFrame {
 					case KeyEvent.VK_SLASH:
 						handleChar(String.valueOf(e.getKeyChar()));
 						break;
+					case KeyEvent.VK_ENTER:
 					case KeyEvent.VK_EQUALS:
 						if(e.isShiftDown()) {
 							handleChar("+");
