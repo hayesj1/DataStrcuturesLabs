@@ -9,8 +9,10 @@ import javax.swing.*;
  */
 public class Project2Stack {
 
+	public static final String calcName = "Optimator Calculator";
+
 	public static void main(String[] args) {
-		System.out.println("Welcome to the Optimator Calculator!");
+		System.out.println("Welcome to the " +calcName + "!");
 		System.out.println("Try pressing 2+2= on your keyboard!");
 		Calculator calc = new Calculator();
 		calc.setVisible(true);
