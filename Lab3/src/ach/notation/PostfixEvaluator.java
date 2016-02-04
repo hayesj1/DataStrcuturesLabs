@@ -37,8 +37,17 @@ public class PostfixEvaluator
 			         val1 = resultStack.pop();
 	                 resultStack.push(val1+val2);
 		         case '-' :
+					 val2 = resultStack.pop();
+					 val1 = resultStack.pop();
+					 resultStack.push(val1-val2);
 		         case '*' :
+					 val2 = resultStack.pop();
+					 val1 = resultStack.pop();
+					 resultStack.push(val1*val2);
 		         case '/' :
+					 val2 = resultStack.pop();
+					 val1 = resultStack.pop();
+					 resultStack.push(val1/val2);
 		         default:
 				         break;
 
