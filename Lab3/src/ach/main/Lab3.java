@@ -21,7 +21,8 @@ public class Lab3 {
     }
 
     /**
-     * Testing code goes in the constructor to remove the code from the static context of main()
+     * Testing code is in the constructor to remove the code from the static context of main();
+     * in a real-world application of stack this would not be appropriate
      */
     public Lab3() {
         System.out.println("Hello World!");
