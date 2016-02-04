@@ -17,9 +17,7 @@ public class PostfixEvaluator
 {
 	public static double eval(String exp)
 	{
-		double sum=0.0;
 		char operator;
-		String expression = ""/* WHATEVER */;
 		ArrayStack<Double> resultStack = new ArrayStack<>();
 		double val1,val2;
 		 for(int i = 0; i < exp.length(); i++)
@@ -41,8 +39,6 @@ public class PostfixEvaluator
 		         case '-' :
 		         case '*' :
 		         case '/' :
-		         case '(' :
-		         case ')' :
 		         default:
 				         break;
 
