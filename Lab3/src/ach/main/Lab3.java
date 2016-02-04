@@ -1,6 +1,7 @@
 package ach.main;
 
 import ach.notation.InfixToPostfix;
+import ach.notation.PostfixEvaluator;
 
 import java.util.Scanner;
 
@@ -39,7 +40,7 @@ public class Lab3 {
 	    System.out.println("You entered: " + inFix);
 	    postFix = InfixToPostfix.convert(inFix);
 	    System.out.println("The PostFix conversion of your expression is: " + postFix);
-	    //result = ;
+	    result = PostfixEvaluator.eval(postFix);
 	    System.out.println("The Result of the Postfix : " + result);
 
     }
