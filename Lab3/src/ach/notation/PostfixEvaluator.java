@@ -1,6 +1,8 @@
 package ach.notation;
 
 
+import ach.stack.ArrayStack;
+
 /**
  *
  * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
@@ -16,6 +18,10 @@ public class PostfixEvaluator
    static double sum=0.0;
    char operator = '';
    String expression = {}/* WHATEVER */;
+   ArrayStack<double> function;
+    double val1,val2;
+
+
  public static double eval(String exp)
  {
      expression=exp;
@@ -26,14 +32,15 @@ public class PostfixEvaluator
 
          switch (operator)
          {
-             case operator = '^' ;
-             case operator = '+' ;
-             case operator = '-' ;
-             case operator = '*' ;
-             case operator = '/' ;
-             case operator = '(' ;
-             case operator = ')' ;
-             case operator
+             case '^'
+                 function.push();
+             case '+'
+                 function.push(val1+val2);
+             case '-' ;
+             case '*' ;
+             case '/' ;
+             case '(' ;
+             case ')';
 
          }
      }
