@@ -20,11 +20,13 @@ public class InfixToPostfix
 		int pos = 0;
 		while (pos < infix.length())
 		{
-			while(Character.isWhitespace(infix.charAt(pos++)));
+			while(Character.isWhitespace(infix.charAt(pos))) {
+				pos++;
+			}
 			char next = infix.charAt(pos);
 
 			if (Character.isAlphabetic(next) || Character.isDigit(next)) {
-				operatorStack.push(next);
+				postfix.append(next);
 			} else {
 				switch (next) {
 					case '^':
