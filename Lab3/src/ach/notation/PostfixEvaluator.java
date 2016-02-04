@@ -15,34 +15,40 @@ import ach.stack.ArrayStack;
  */
 public class PostfixEvaluator
 {
-   static double sum=0.0;
-   char operator = '';
-   String expression = {}/* WHATEVER */;
-   ArrayStack<double> function;
-    double val1,val2;
+	public static double eval(String exp)
+	{
+		double sum=0.0;
+		char operator;
+		String expression = ""/* WHATEVER */;
+		ArrayStack<Double> resultStack = new ArrayStack<>();
+		double val1,val2;
+		 for(int i = 0; i < exp.length(); i++)
+	     {
+	         operator = exp.charAt(i);
+		     if (Character.isDigit(operator)) {
+			     resultStack.push(Character.getNumericValue(operator) * 1.0);
+		     }
+	         switch (operator)
+	         {
+		         case '^' :
+			         val2 = resultStack.pop();
+			         val1 = resultStack.pop();
+	                 resultStack.push(Math.pow(val1, val2));
+		         case '+':
+			         val2 = resultStack.pop();
+			         val1 = resultStack.pop();
+	                 resultStack.push(val1+val2);
+		         case '-' :
+		         case '*' :
+		         case '/' :
+		         case '(' :
+		         case ')' :
+		         default:
+				         break;
 
 
- public static double eval(String exp)
- {
-     expression=exp;
-
-     for(int i = 0; i < expression.length(); i++)
-     {
-         operator = exp.charAt(i);
-
-         switch (operator)
-         {
-             case '^'
-                 function.push();
-             case '+'
-                 function.push(val1+val2);
-             case '-' ;
-             case '*' ;
-             case '/' ;
-             case '(' ;
-             case ')';
-
-         }
-     }
- }
+	         }
+	     }
+		return resultStack.pop();
+	}
 }
