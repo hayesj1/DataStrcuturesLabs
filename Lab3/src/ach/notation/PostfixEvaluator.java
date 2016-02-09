@@ -32,24 +32,29 @@ public class PostfixEvaluator
 			         val2 = resultStack.pop();
 			         val1 = resultStack.pop();
 	                 resultStack.push(Math.pow(val1, val2));
+			         break;
 		         case '+':
 			         val2 = resultStack.pop();
 			         val1 = resultStack.pop();
 	                 resultStack.push(val1+val2);
+			         break;
 		         case '-' :
 					 val2 = resultStack.pop();
 					 val1 = resultStack.pop();
 					 resultStack.push(val1-val2);
+			         break;
 		         case '*' :
 					 val2 = resultStack.pop();
 					 val1 = resultStack.pop();
 					 resultStack.push(val1*val2);
+			         break;
 		         case '/' :
 					 val2 = resultStack.pop();
 					 val1 = resultStack.pop();
 					 resultStack.push(val1/val2);
+			         break;
 		         default:
-				         break;
+			         break;
 
 
 	         }
