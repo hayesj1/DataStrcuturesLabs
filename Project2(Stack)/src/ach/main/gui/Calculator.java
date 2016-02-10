@@ -8,6 +8,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 /**
+ * Most of the swing code is found in the gui form Calculator.form.
+ * This is because our team used the builtin gui-builder in the Intellij Idea IDE.
+ *
  * Created by hayesj3 on 2/1/2016.
  */
 public class Calculator extends JFrame {
@@ -43,10 +46,12 @@ public class Calculator extends JFrame {
 		this.setPreferredSize(new Dimension(300, 300));
 		this.setSize(300, 300);
 
+		// adds key-bindings
 		KeyAdapter kl = new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				switch(e.getKeyCode()) {
+					// handles direct char appending
 					case KeyEvent.VK_0:
 					case KeyEvent.VK_1:
 					case KeyEvent.VK_2:
@@ -64,23 +69,28 @@ public class Calculator extends JFrame {
 					case KeyEvent.VK_SLASH:
 						handleChar(String.valueOf(e.getKeyChar()));
 						break;
+					// handles equals
 					case KeyEvent.VK_ENTER:
 					case KeyEvent.VK_EQUALS:
 						if(e.isShiftDown()) {
-							handleChar("+");
+							handleChar("+"); // handles the + operator
 						} else {
-							handleEquals();
+							handleEquals(); // handles evaluation
 						}
 						break;
+					// hanldes quit
 					case KeyEvent.VK_Q:
 						handleQuit();
 						break;
+					// handles clear
 					case KeyEvent.VK_C:
 						handleClear();
 						break;
+					// handles backspace
 					case KeyEvent.VK_BACK_SPACE:
 						handleBackspace();
 						break;
+					// ignore other keys
 					default:
 						break;
 				}
@@ -95,6 +105,11 @@ public class Calculator extends JFrame {
 		this.pack();
 	}
 
+	/**
+	 * Converts the expression in infix to postfix notation
+	 * @param infix the human readable exression to convert to postfix
+	 * @return the postfix expression
+	 */
 	private String toPostFix(String infix) {
 		StringBuilder ret = new StringBuilder();
 		ArrayStack<Character> operatorStack = new ArrayStack<>();
@@ -161,6 +176,11 @@ public class Calculator extends JFrame {
 		return ret.toString();
 	}
 
+	/**
+	 * parses and evaluates a postfix expression to obtain a value, using integer arithmetic
+	 * @param postFix the expression to parse and evaluate
+	 * @return the integer result
+	 */
 	private int parse(String postFix) {
 		int result = 0;
 		int pos = 0;
@@ -199,29 +219,57 @@ public class Calculator extends JFrame {
 		return result;
 	}
 
+	/**
+	 * checks if ch is an arithmetic operator
+	 * @param ch the character to check
+	 * @return true if ch is a +, -, *, or / ; false otherwise
+	 */
 	private boolean isOperator(char ch) {
 		return (ch == '+' || ch == '-' || ch == '*' ||ch == '/');
 	}
 
+	/**
+	 * handler for quitting
+	 */
 	private void handleQuit() {
 		quit();
 	}
+
+	/**
+	 * handler for clear
+	 */
 	private void handleClear() {
 		output.setText("");
 	}
+
+	/**
+	 * handler for backspace
+	 */
 	private void handleBackspace() {
 		String str = output.getText().substring(0, output.getText().length()-1);
 		output.setText(str);
 	}
+
+	/**
+	 * handler for equals
+	 */
 	private void handleEquals() {
 		String postFix = toPostFix(output.getText());
 		int result = parse(postFix);
 		output.setText(String.valueOf(result));
 	}
+
+	/**
+	 * generic handler for appending a char to the display
+	 * @param ch the character to append
+	 */
 	private void handleChar(String ch) {
 		output.append(ch);
 	}
 
+	/**
+	 * adds actionListners to all the buttons on the calculator
+	 */
 	private void addActionListners() {
 		buttonQuit.addActionListener(e -> handleQuit());
 		buttonClear.addActionListener(e -> handleClear());
@@ -249,6 +297,9 @@ public class Calculator extends JFrame {
 		button9.addActionListener(e -> handleChar("9"));
 	}
 
+	/**
+	 * exits the calculator application
+	 */
 	void quit() {
 		this.dispose();
 		System.out.println("Thanks for using the Optimus Calculator! Goodbye!");
@@ -256,8 +307,16 @@ public class Calculator extends JFrame {
 	}
 
 }
+
+/**
+ * Wrapper class for characters which are operators; defines operator precedence
+ */
 class Operator {
 
+	/**
+	 * defines the levels of precedence; higher precedences are defined after lower precedences.
+	 * This allows for easy comparison with <code>getState().ordinal();</code>
+	 */
 	enum PrecedenceStates { AddSub, MultDiv }
 
 	char theOp;
