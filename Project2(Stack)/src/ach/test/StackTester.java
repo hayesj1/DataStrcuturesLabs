@@ -36,9 +36,13 @@ public class StackTester {
 		System.out.println("Testing completed successfully!");
 		}
 
-	private static void outputStackContents(ArrayStack strStack) {
-		while (!strStack.isEmpty()) {
-			System.out.println(strStack.pop());
+	/**
+	 * empties a stac kand outputs it's contents
+	 * @param stack the stack to process
+	 */
+	private static void outputStackContents(ArrayStack stack) {
+		while (!stack.isEmpty()) {
+			System.out.println(stack.pop());
 	}
 }
 }

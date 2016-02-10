@@ -14,6 +14,11 @@ import ach.stack.ArrayStack;
  */
 public class InfixToPostfix
 {
+	/**
+	 * Takes in an infix expression and converts it to postfix
+	 * @param infix the expression to convert
+	 * @return a postfix version of infix
+	 */
 	public static String convert(String infix) {
 		ArrayStack<Character> operatorStack = new ArrayStack<>();
 		StringBuilder postfix = new StringBuilder("");
@@ -66,7 +71,7 @@ public class InfixToPostfix
 	}
 
 	/**
-	 * Returns 1 for addition or subtraction, and 2 for multiplicatin and division, and 0 if op is not an operator
+	 * Returns 1 for addition or subtraction, and 2 for multiplication and division, and 0 if op is not an operator
 	 * @param op the operator to test
 	 * @return 0,1,2 depending on the value of op
 	 */
