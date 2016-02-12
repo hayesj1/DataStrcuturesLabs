@@ -11,6 +11,12 @@ import java.awt.event.KeyEvent;
  * Most of the swing code is found in the gui form Calculator.form.
  * This is because our team used the builtin gui-builder in the Intellij Idea IDE.
  *
+ * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
+ *
+ * @author Christian Abate-Wong
+ * @author Karen Camaso
+ * @author Jacob Hayes
+ *
  * Created by hayesj3 on 2/1/2016.
  */
 public class Calculator extends JFrame {

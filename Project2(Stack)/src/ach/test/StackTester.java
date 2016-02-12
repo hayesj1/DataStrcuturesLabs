@@ -4,6 +4,13 @@ import ach.stack.ArrayStack;
 
 /**
  * Test code for Stack.
+ *
+ * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
+ *
+ * @author Christian Abate-Wong
+ * @author Karen Camaso
+ * @author Jacob Hayes
+ *
  * Created by hayesj3 on 2/2/2016.
  */
 public class StackTester {
