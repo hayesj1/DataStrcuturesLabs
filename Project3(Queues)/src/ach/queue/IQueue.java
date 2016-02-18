@@ -10,4 +10,13 @@ package ach.queue;
  * Created by hayesj3 on 2/12/2016.
  */
 public interface IQueue<T> {
+
+	void enqueue(T newEntry);
+	T dequeue();
+
+	T getFront();
+
+	boolean isEmpty();
+	boolean isFull();
+	void clear();
 }
