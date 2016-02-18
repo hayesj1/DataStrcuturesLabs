@@ -10,9 +10,12 @@ package ach.train;
  */
 public class TrainRoute
 {
-    public String[9] route;
+    public String[9] routePool = {"Red", "Blue", "Yellow","Cyan","Magenta","Pink","White","Black","Rainbow"};
+    public Station[9]
     public TrainRoute()
     {
-
+    // ...[o-o-o]...
     }
+
+
 }
