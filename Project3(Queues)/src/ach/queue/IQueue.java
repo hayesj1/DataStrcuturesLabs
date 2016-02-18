@@ -11,6 +11,8 @@ package ach.queue;
  */
 public interface IQueue<T> {
 
+	int DEFAULT_CAPACITY = 25;
+
 	void enqueue(T newEntry);
 	T dequeue();
 

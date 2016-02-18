@@ -14,6 +14,16 @@ public class CircularArrayQueue<T> implements IQueue<T> {
 	private T[] queue;
 	private int front;
 	private int back;
+	private int capacity;
+
+	public CircularArrayQueue() { this(DEFAULT_CAPACITY); }
+
+	public CircularArrayQueue(int capacity) {
+		this.capacity = capacity;
+		queue = (T[]) new Object[capacity];
+		front = 0;
+	}
+
 	@Override
 	public void enqueue(T newEntry) {
 
@@ -31,12 +41,12 @@ public class CircularArrayQueue<T> implements IQueue<T> {
 
 	@Override
 	public boolean isEmpty() {
-		return false;
+		return front == (back + 1) % capacity;
 	}
 
 	@Override
 	public boolean isFull() {
-		return false;
+		return front == (back + 2) % capacity;
 	}
 
 	@Override
