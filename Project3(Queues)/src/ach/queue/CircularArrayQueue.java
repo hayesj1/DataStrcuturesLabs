@@ -22,21 +22,30 @@ public class CircularArrayQueue<T> implements IQueue<T> {
 		this.capacity = capacity;
 		queue = (T[]) new Object[capacity];
 		front = 0;
+		back = queue.length-1;
 	}
 
 	@Override
 	public void enqueue(T newEntry) {
-
+		if(isFull()) {
+			ensureCapacity();
+		}
+		queue[++back] = newEntry;
 	}
 
 	@Override
-	public T dequeue() {
-		return null;
+	public T dequeue() throws EmptyQueueException {
+		T entry = null;
+		if(isEmpty()) {
+			throw new EmptyQueueException("dequeue");
+		}
+		entry = queue[front--];
+		return entry;
 	}
 
 	@Override
 	public T getFront() {
-		return null;
+		return queue[front];
 	}
 
 	@Override
@@ -51,6 +60,21 @@ public class CircularArrayQueue<T> implements IQueue<T> {
 
 	@Override
 	public void clear() {
+		for (T entry : queue) {
+			entry = null;
+		}
+	}
 
+	private void ensureCapacity() {
+		T[] old = queue;
+		T[] temp = (T[]) new Object[2*capacity];
+		for (int i = 0; i < capacity - 1; i++){
+			temp[i] = old[(front + i)%capacity];
+			old[(front + i)%capacity]= null;
+		}
+		front = 0;
+		back = capacity - 2;
+		capacity *= 2;
+		queue = temp;
 	}
 }
