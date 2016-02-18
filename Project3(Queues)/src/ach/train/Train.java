@@ -14,4 +14,18 @@ public class Train {
 
 	private int numCars;
 	//private int
+
+	public Remove()
+	{
+		// removes passengers
+	}
+	public Board()
+	{
+		// boards all passengers on the station
+	}
+
+	public Travel()
+	{
+		// Train moves to next stop, drops stop it was just at in TrainRoute
+	}
 }
