@@ -13,6 +13,7 @@ public class Station
     private boolean IsTerminal = false;
     private boolean IsUsed = false;
     private String name = "";
+    private int numOfPassengers
 
     public boolean isTerminal()
     {

@@ -14,9 +14,22 @@ import java.util.Random;
 
 public class Passenger
 {
-    private String destination;
+    private String endingLoc;
     private String startingLoc;
 
+    public String getEndingLoc() {
+        return endingLoc;
+    }
 
+    public void setEndingLoc(String endingLoc) {
+        this.endingLoc = endingLoc;
+    }
 
+    public String getStartingLoc() {
+        return startingLoc;
+    }
+
+    public void setStartingLoc(String startingLoc) {
+        this.startingLoc = startingLoc;
+    }
 }
