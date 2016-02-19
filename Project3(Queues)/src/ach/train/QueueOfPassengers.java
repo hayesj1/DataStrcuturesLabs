@@ -9,3 +9,6 @@ package ach.train;
  *         Created by camasok on 2/18/2016.
  */
 public class Station
+{
+    private String name = "";
+}
