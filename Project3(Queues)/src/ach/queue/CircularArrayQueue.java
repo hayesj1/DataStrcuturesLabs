@@ -29,13 +29,15 @@ public class CircularArrayQueue<T> implements IQueue<T> {
 	public void enqueue(T newEntry) {
 		if(isFull()) {
 			ensureCapacity();
+		} else if (isEmpty()) {
+			back = 0;
 		}
-		queue[++back] = newEntry;
+		queue[back++] = newEntry;
 	}
 
 	@Override
 	public T dequeue() throws EmptyQueueException {
-		T entry = null;
+		T entry;
 		if(isEmpty()) {
 			throw new EmptyQueueException("dequeue");
 		}

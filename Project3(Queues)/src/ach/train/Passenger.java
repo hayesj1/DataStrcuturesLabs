@@ -1,7 +1,4 @@
 package ach.train;
-import java.util.String;
-import java.util.Random;
-
 /**
  * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
  *
@@ -14,22 +11,14 @@ import java.util.Random;
 
 public class Passenger
 {
-    private String endingLoc;
-    private String startingLoc;
+    private String dest;
 
-    public String getEndingLoc() {
-        return endingLoc;
+    public String getDest() {
+        return dest;
     }
 
-    public void setEndingLoc(String endingLoc) {
-        this.endingLoc = endingLoc;
-    }
-
-    public String getStartingLoc() {
-        return startingLoc;
-    }
-
-    public void setStartingLoc(String startingLoc) {
-        this.startingLoc = startingLoc;
+    public Passenger setDest(String dest) {
+        this.dest = dest;
+	    return this;
     }
 }
