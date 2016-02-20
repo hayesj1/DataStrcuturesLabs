@@ -58,6 +58,13 @@ public class Project3Queue {
 				exSer.execute(future);
 				dispatchedTrains.add(future);
 				System.out.println("Dispatched Train #" + train.getTrainNo());
+
+				// Uncomment the following to fix "insanely fast train creation" bug
+				/*try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}*/
 			}
 		});
 		Thread arrivalDisplay = new Thread(() -> {
