@@ -59,7 +59,7 @@ public class Project3Queue {
 				dispatchedTrains.add(future);
 				System.out.println("Dispatched Train #" + train.getTrainNo());
 
-				// Uncomment the following to fix "insanely fast train creation" bug
+				//TODO Uncomment the following to fix "insanely fast train creation" bug
 				/*try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {
