@@ -53,10 +53,11 @@ public class Train {
 	public void travel(int delay) throws EmptyQueueException {
 		// Train moves to next stop, drops stop it was just at in TrainRoute
 		try {
-			stops.dequeue();
+			System.out.println("train #" + this.getTrainNo() + " has departed from " + stops.dequeue());
 			currStation = null;
-			Thread.sleep(delay * 1000);
+			Thread.sleep(0 * 1000);
 			this.currStation = stops.getFront();
+			System.out.println("Train #" + this.getTrainNo() + " has arrived at " + this.getCurrStation());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -64,12 +65,13 @@ public class Train {
 
 	public void beginRoute(int delay) {
 		try {
-			while (true) {
+			while (!this.stops.isEmpty()) {
 				this.travel(delay);
 				this.offLoad();
 				this.board();
 			}
 		} catch (EmptyQueueException e) {
+			System.out.println("Train #" + this.getTrainNo() + " is now out of service!");
 			return;
 		}
 	}

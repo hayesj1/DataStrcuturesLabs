@@ -45,4 +45,9 @@ public class Station
 	public void addPassengerToLine(Passenger p) {
 		queueOfPassengers.addPassenger(p);
 	}
+
+	@Override
+	public String toString() {
+		return this.getName();
+	}
 }
