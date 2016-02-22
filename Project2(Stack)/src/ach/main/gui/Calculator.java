@@ -192,6 +192,7 @@ public class Calculator extends JFrame {
 		int pos = 0;
 		int operand1, operand2;
 		char ch;
+		System.out.println(postFix);
 
 		ArrayStack<Integer> stack = new ArrayStack<>();
 		while (pos < postFix.length()) {

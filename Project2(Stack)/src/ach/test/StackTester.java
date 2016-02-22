@@ -44,7 +44,7 @@ public class StackTester {
 		}
 
 	/**
-	 * empties a stac kand outputs it's contents
+	 * empties a stack and outputs it's contents
 	 * @param stack the stack to process
 	 */
 	private static void outputStackContents(ArrayStack stack) {

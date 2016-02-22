@@ -1,4 +1,7 @@
 package ach.train;
+
+import ach.queue.EmptyQueueException;
+
 /**
  * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
  *
@@ -11,9 +14,8 @@ package ach.train;
 public class Station
 {
     private boolean IsTerminal = false;
-    private boolean IsUsed = false;
     private String name = "";
-    private int numOfPassengers
+    private QueueOfPassengers queueOfPassengers = new QueueOfPassengers();
 
     public boolean isTerminal()
     {
@@ -23,16 +25,6 @@ public class Station
     public void setTerminal(boolean terminal)
     {
         IsTerminal = terminal;
-    }
-
-    public boolean isUsed()
-    {
-        return IsUsed;
-    }
-
-    public void setUsed(boolean used)
-    {
-        IsUsed = used;
     }
 
     public String getName()
@@ -46,4 +38,11 @@ public class Station
     }
 
 
+	public Passenger getNextInLine() throws EmptyQueueException {
+		return queueOfPassengers.removePassenger();
+	}
+
+	public void addPassengerToLine(Passenger p) {
+		queueOfPassengers.addPassenger(p);
+	}
 }
