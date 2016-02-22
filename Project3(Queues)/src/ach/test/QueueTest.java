@@ -1,5 +1,7 @@
 package ach.test;
 
+import ach.queue.CircularArrayQueue;
+
 /**
  * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
  *
@@ -14,7 +16,7 @@ public class QueueTest {
 	public static void main(String[] args)
 	{
 		System.out.println("Test!");
-		CircularArrayQueue<int> test1 = new CircularArrayQueue();
+		CircularArrayQueue<Integer> test1 = new CircularArrayQueue<>();
 
 		test1.enqueue(8);
 
