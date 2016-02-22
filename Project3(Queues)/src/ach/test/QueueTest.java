@@ -1,5 +1,8 @@
 package ach.test;
 
+import ach.queue.CircularArrayQueue;
+import ach.queue.EmptyQueueException;
+
 /**
  * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
  *
@@ -11,12 +14,26 @@ package ach.test;
  */
 public class QueueTest {
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws EmptyQueueException
 	{
 		System.out.println("Test!");
-		CircularArrayQueue<int> test1 = new CircularArrayQueue();
+		CircularArrayQueue<String> test1 = new CircularArrayQueue();
 
-		test1.enqueue(8);
+		test1.enqueue("One");
+		test1.enqueue("Two");
+		test1.enqueue("Three");
+		test1.enqueue("Four");
+		test1.enqueue("Five");
+		test1.enqueue("Six");
+		test1.enqueue("Seven");
+		test1.enqueue("Eight");
+		test1.enqueue("Nine");
+		test1.enqueue("Ten");
+
+		System.out.println(test1.dequeue());
+		System.out.println(test1.dequeue());
+		System.out.println(test1.dequeue());
+		System.out.println(test1.dequeue());
 
 	}
 }
