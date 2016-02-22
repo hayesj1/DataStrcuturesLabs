@@ -30,10 +30,13 @@ public class QueueTest {
 		test1.enqueue("Nine");
 		test1.enqueue("Ten");
 
-		System.out.println(test1.dequeue());
-		System.out.println(test1.dequeue());
-		System.out.println(test1.dequeue());
-		System.out.println(test1.dequeue());
+		for(int i = 0; i < 10; i++)
+		{
+			System.out.println(test1.dequeue());
+		}
+
+		System.out.println(test1.isEmpty());
+		System.out.println(test1.isFull());
 
 	}
 }
