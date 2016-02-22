@@ -41,7 +41,7 @@ public class Project3Queue {
 					stations[stIdx].addPassengerToLine(new Passenger()
 							.setDest(TrainRoute.stationNamePool[rand.nextInt(TrainRoute.numStations)]));
 					System.out.println("Added Passenger to " + stations[stIdx].getName() + " Station");
-					Thread.sleep(rand.nextInt(10) * 100);
+					Thread.sleep(rand.nextInt(10) * 1000);
 				} catch (InterruptedException e) { continue; }
 			}
 		});
@@ -53,18 +53,18 @@ public class Project3Queue {
 				Train train = new Train().init(rand.nextInt(8), stations);
 				Integer trainNo = train.getTrainNo();
 				FutureTask<Integer> future = new FutureTask<>(() -> {
-					train.beginRoute(rand.nextInt(10));
+					train.beginRoute(rand.nextInt(6));
 				}, trainNo);
 				exSer.execute(future);
 				dispatchedTrains.add(future);
 				System.out.println("Dispatched Train #" + train.getTrainNo());
 
 				//TODO Uncomment the following to fix "insanely fast train creation" bug
-				/*try {
+				try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-				}*/
+				}
 			}
 		});
 		Thread arrivalDisplay = new Thread(() -> {
@@ -88,7 +88,7 @@ public class Project3Queue {
 			System.out.println("Starting Train Dispatch System...");
 			arrivalDisplay.start();
 		});
-		exSer.shutdown();
+		//exSer.shutdown();
 		exSer.awaitTermination(dur, TimeUnit.MINUTES);
 	}
 }

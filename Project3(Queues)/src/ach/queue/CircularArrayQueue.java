@@ -41,7 +41,7 @@ public class CircularArrayQueue<T> implements IQueue<T> {
 		if(isEmpty()) {
 			throw new EmptyQueueException("dequeue");
 		}
-		entry = queue[front--];
+		entry = queue[front++];
 		return entry;
 	}
 
