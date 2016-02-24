@@ -38,5 +38,12 @@ public class QueueTest {
 		System.out.println(test1.isEmpty());
 		System.out.println(test1.isFull());
 
+		test1.enqueue("One");
+		test1.enqueue("Two");
+		System.out.println(test1.getFront());
+
+		test1.clear();
+
+		System.out.println(test1.isEmpty());
 	}
 }
