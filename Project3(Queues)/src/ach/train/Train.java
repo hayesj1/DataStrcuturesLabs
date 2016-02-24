@@ -18,6 +18,9 @@ public class Train {
 	public static final int capacityPerCar = 25;
 	/**
 	 * allows easy calculation of Train Number
+	 *
+	 * because modern convention for train numbers is in the thousands,
+	 * the first train initialized will have number 1000
 	 */
 	private static int numTrains = 1000;
 
@@ -34,20 +37,25 @@ public class Train {
 		// removes passengers
 		if (passengersOnBoard > 0) {
 			if (currStation.isTerminal() && !currStation.getName().equals(firstStation)) { passengers.clear(); }
-
-			passengers.removeIf(passenger -> (passenger.getDest().equals(currStation.getName())));
+			else {
+				passengers.removeIf(passenger -> (passenger.getDest().equals(currStation.getName())));
+			}
 		}
 	}
 	public void board() {
 		// boards all passengers, or as many as can fit on the train, from the platform at the current station
+		int passCount = 0;
 		try {
 			while (passengersOnBoard <= capacity) {
 				passengers.add(currStation.getNextInLine());
 				passengersOnBoard++;
+				passCount++;
 			}
 		} catch (EmptyQueueException e) {
+			System.out.println("All passengers at " + getCurrStation() + " boarded Train #" + getTrainNo());
 			return;
 		}
+		System.out.println(passCount + " passengers boarded Train #" + getTrainNo() + " at " + getCurrStation() + " station");
 	}
 
 	public void travel(int delay) throws EmptyQueueException {
@@ -59,7 +67,8 @@ public class Train {
 			this.currStation = stops.getFront();
 			if(this.getCurrStation() == null) { throw new EmptyQueueException(); }
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return;
+			//e.printStackTrace();
 		}
 	}
 

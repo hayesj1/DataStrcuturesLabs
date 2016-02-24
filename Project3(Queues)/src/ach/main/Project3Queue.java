@@ -1,6 +1,5 @@
 package ach.main;
 
-import ach.train.Passenger;
 import ach.train.Station;
 import ach.train.Train;
 import ach.train.TrainRoute;
@@ -28,39 +27,42 @@ public class Project3Queue {
 
 	private static ArrayList<FutureTask<Integer>> dispatchedTrains = new ArrayList<>();
 	private static int delay = -1;
+	private static boolean createMoreTrains = true;
 
 	public static void main(String[] args) throws InterruptedException {
 		System.out.println("Welcome to the Train Route Simulator!");
 		System.out.println("How many minutes for the simulation run for?");
 		Scanner s = new Scanner(System.in);
 		int dur = s.nextInt();
-		delay = ThreadLocalRandom.current().nextInt(6);
+		do {
+			delay = ThreadLocalRandom.current().nextInt(6);
+		} while (delay == 0);
 		TrainRoute trainRoute = new TrainRoute();
 		Station[] stations = TrainRoute.stationPool;
+
+		ExecutorService exSer = Executors.newCachedThreadPool();
 
 		Thread passengerAdder = new Thread(() -> {
 			ThreadLocalRandom rand = ThreadLocalRandom.current();
 			while (true) {
 				try {
 					int stIdx = rand.nextInt(stations.length);
-					stations[stIdx].addPassengerToLine(new Passenger()
-							.setDest(TrainRoute.stationNamePool[rand.nextInt(TrainRoute.numStations)]));
-					System.out.println("Added Passenger to " + stations[stIdx].getName() + " Station");
-					Thread.sleep(rand.nextInt(10) * 1000);
-				} catch (InterruptedException e) { continue; }
+					stations[stIdx].addPassengerToLine(rand);
+					//System.out.println("Added Passenger to " + stations[stIdx].getName() + " Station");
+					Thread.sleep(rand.nextInt(3) * 1000);
+				} catch (InterruptedException e) {}
 			}
 		});
 		Thread trainDispatcher = new Thread(() -> {
 			ThreadLocalRandom rand = ThreadLocalRandom.current();
-			ExecutorService exSer = Executors.newCachedThreadPool();
 
-			while (true) {
+			while (!exSer.isShutdown() && createMoreTrains) {
 				Train train = new Train().init(rand.nextInt(8), stations);
 				Integer trainNo = train.getTrainNo();
 				FutureTask<Integer> future = new FutureTask<>(() -> {
 					train.beginRoute(delay);
 				}, trainNo);
-				exSer.execute(future);
+				exSer.submit(future);
 				dispatchedTrains.add(future);
 				System.out.println("Dispatched Train #" + train.getTrainNo());
 
@@ -73,10 +75,10 @@ public class Project3Queue {
 		});
 		Thread arrivalDisplay = new Thread(() -> {
 			do {
-				dispatchedTrains.forEach(f -> {
+				dispatchedTrains.forEach(train -> {
 					try {
-						System.out.println("Train #" + f.get(5L, TimeUnit.SECONDS) + " has arrived it its final stop!");
-						dispatchedTrains.remove(f);
+						System.out.println("Train #" + train.get(5L, TimeUnit.SECONDS) + " has arrived it its final stop!");
+						dispatchedTrains.remove(train);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					} catch (ExecutionException e) {
@@ -85,7 +87,7 @@ public class Project3Queue {
 				});
 			} while (!dispatchedTrains.isEmpty());
 		});
-		ExecutorService exSer = Executors.newSingleThreadExecutor();
+
 		exSer.execute(() -> {
 			passengerAdder.start();
 			trainDispatcher.start();
@@ -93,8 +95,16 @@ public class Project3Queue {
 			arrivalDisplay.start();
 		});
 		int t = displayCounter(dur*60);
-		if(t == 0) { exSer.shutdown(); }
-		exSer.awaitTermination(t, TimeUnit.SECONDS);
+		exSer.shutdown();
+		createMoreTrains = false;
+		if(t == 0) { exSer.shutdownNow(); }
+
+		if (exSer.awaitTermination(t+5, TimeUnit.SECONDS)) {
+			System.out.println("Train Route Simulator has shutdown successfully!");
+		} else {
+			System.out.println("Train Route Simulator failed to shutdown successfully!");
+		}
+		System.exit(0);
 	}
 
 	private static int displayCounter(int dur) {
@@ -122,7 +132,7 @@ public class Project3Queue {
 
 		counter.setEditable(false);
 		counter.setHorizontalAlignment(JTextField.CENTER);
-		counter.setFont(new Font(oldNewspaper.getName(), Font.BOLD, 12));
+		counter.setFont(new Font(oldNewspaper.getName(), Font.BOLD, 18));
 		counter.setPreferredSize(new Dimension(50, 26));
 		imagePanel.setPreferredSize(new Dimension(500, 274));
 		counterPanel.setPreferredSize(new Dimension(500, 26));
@@ -138,12 +148,13 @@ public class Project3Queue {
 		window.setVisible(true);
 
 		int i;
-		for (i = dur; i > 0; i--) {
+		for (i = dur; i >= 0; i--) {
 			counter.setText(String.valueOf(i) + " seconds remain in the Simulation");
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {}
 		}
+		window.dispose();
 		return i;
 	}
 }
