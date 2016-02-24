@@ -5,11 +5,12 @@ import ach.train.Station;
 import ach.train.Train;
 import ach.train.TrainRoute;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.*;
@@ -103,34 +104,37 @@ public class Project3Queue {
 		JPanel counterPanel = new JPanel(new BorderLayout(5, 2));
 		JTextField counter = new JTextField(String.valueOf(dur) + " seconds remain in the Simulation");
 
-		Image train = null;
-		Font contm = null;
-		try {
-			train = ImageIO.read(new File("train.gif"));
+		URL url = Project3Queue.class.getResource("train.gif");
+		ImageIcon train = new ImageIcon(url, "Train gif");
 
-			contm = Font.createFont(Font.TRUETYPE_FONT, new File("contm.ttf"));
-			GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(contm);
+		Font oldNewspaper = null;
+		try {
+			URL url2 = Project3Queue.class.getResource("OldNewspaperTypes.ttf");
+			oldNewspaper = Font.createFont(Font.TRUETYPE_FONT, new File(url2.toURI()));
+			GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(oldNewspaper);
 		} catch (IOException e) {
-			System.err.println("The train.gif file was not found or is corrupt!");
+			e.printStackTrace();
 		} catch (FontFormatException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 
 		counter.setEditable(false);
 		counter.setHorizontalAlignment(JTextField.CENTER);
-		counter.setFont(contm);
+		counter.setFont(new Font(oldNewspaper.getName(), Font.BOLD, 12));
 		counter.setPreferredSize(new Dimension(50, 26));
 		imagePanel.setPreferredSize(new Dimension(500, 274));
 		counterPanel.setPreferredSize(new Dimension(500, 26));
 
-		if(train != null) {
-			imagePanel.update(train.getGraphics());
-			contentpane.add(imagePanel, BorderLayout.SOUTH);
-		}
+		imagePanel.add(new JLabel(train), SwingConstants.CENTER);
 		counterPanel.add(counter);
 
+		contentpane.add(imagePanel, BorderLayout.SOUTH);
 		contentpane.add(counterPanel, BorderLayout.NORTH);
 
+		window.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		window.pack();
 		window.setVisible(true);
 
 		int i;
