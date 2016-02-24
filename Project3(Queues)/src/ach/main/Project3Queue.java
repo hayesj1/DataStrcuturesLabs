@@ -5,6 +5,11 @@ import ach.train.Station;
 import ach.train.Train;
 import ach.train.TrainRoute;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.*;
@@ -86,7 +91,55 @@ public class Project3Queue {
 			System.out.println("Starting Train Dispatch System...");
 			arrivalDisplay.start();
 		});
-		//exSer.shutdown();
-		exSer.awaitTermination(dur, TimeUnit.MINUTES);
+		int t = displayCounter(dur*60);
+		if(t == 0) { exSer.shutdown(); }
+		exSer.awaitTermination(t, TimeUnit.SECONDS);
+	}
+
+	private static int displayCounter(int dur) {
+		JFrame window = new JFrame("Train Route Simulator");
+		Container contentpane = window.getContentPane();
+		JPanel imagePanel = new JPanel();
+		JPanel counterPanel = new JPanel(new BorderLayout(5, 2));
+		JTextField counter = new JTextField(String.valueOf(dur) + " seconds remain in the Simulation");
+
+		Image train = null;
+		Font contm = null;
+		try {
+			train = ImageIO.read(new File("train.gif"));
+
+			contm = Font.createFont(Font.TRUETYPE_FONT, new File("contm.ttf"));
+			GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(contm);
+		} catch (IOException e) {
+			System.err.println("The train.gif file was not found or is corrupt!");
+		} catch (FontFormatException e) {
+			e.printStackTrace();
+		}
+
+		counter.setEditable(false);
+		counter.setHorizontalAlignment(JTextField.CENTER);
+		counter.setFont(contm);
+		counter.setPreferredSize(new Dimension(50, 26));
+		imagePanel.setPreferredSize(new Dimension(500, 274));
+		counterPanel.setPreferredSize(new Dimension(500, 26));
+
+		if(train != null) {
+			imagePanel.update(train.getGraphics());
+			contentpane.add(imagePanel, BorderLayout.SOUTH);
+		}
+		counterPanel.add(counter);
+
+		contentpane.add(counterPanel, BorderLayout.NORTH);
+
+		window.setVisible(true);
+
+		int i;
+		for (i = dur; i > 0; i--) {
+			counter.setText(String.valueOf(i) + " seconds remain in the Simulation");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {}
+		}
+		return i;
 	}
 }

@@ -30,18 +30,25 @@ public class CircularArrayQueue<T> implements IQueue<T> {
 		if(isFull()) {
 			ensureCapacity();
 		} else if (isEmpty()) {
+			front = 0;
 			back = 0;
+			queue[back] = newEntry;
+		} else {
+			back = (back + 1) % capacity;
+			queue[back] = newEntry;
 		}
-		queue[back++] = newEntry;
 	}
 
 	@Override
 	public T dequeue() throws EmptyQueueException {
 		T entry;
 		if(isEmpty()) {
+			front = 0;
 			throw new EmptyQueueException("dequeue");
 		}
-		entry = queue[front++];
+		entry = queue[front];
+		queue[front] = null;
+		front = (front+1)%capacity;
 		return entry;
 	}
 
@@ -65,6 +72,8 @@ public class CircularArrayQueue<T> implements IQueue<T> {
 		for (T entry : queue) {
 			entry = null;
 		}
+		front = 0;
+		back = capacity-1;
 	}
 
 	private void ensureCapacity() {
@@ -72,10 +81,10 @@ public class CircularArrayQueue<T> implements IQueue<T> {
 		T[] temp = (T[]) new Object[2*capacity];
 		for (int i = 0; i < capacity - 1; i++){
 			temp[i] = old[(front + i)%capacity];
-			old[(front + i)%capacity]= null;
+			old[(front + i)%capacity] = null;
 		}
 		front = 0;
-		back = capacity - 2;
+		back = capacity - 1;
 		capacity *= 2;
 		queue = temp;
 	}
