@@ -6,7 +6,6 @@ import ach.train.Train;
 import ach.train.TrainRoute;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.*;
 
@@ -22,21 +21,21 @@ import java.util.concurrent.*;
 public class Project3Queue {
 
 	private static ArrayList<FutureTask<Integer>> dispatchedTrains = new ArrayList<>();
+	private static int delay = -1;
 
 	public static void main(String[] args) throws InterruptedException {
 		System.out.println("Welcome to the Train Route Simulator!");
 		System.out.println("How many minutes for the simulation run for?");
 		Scanner s = new Scanner(System.in);
 		int dur = s.nextInt();
+		delay = ThreadLocalRandom.current().nextInt(6);
 		TrainRoute trainRoute = new TrainRoute();
 		Station[] stations = TrainRoute.stationPool;
 
 		Thread passengerAdder = new Thread(() -> {
-			Random rand ;
-
+			ThreadLocalRandom rand = ThreadLocalRandom.current();
 			while (true) {
 				try {
-					rand = new Random(System.currentTimeMillis());
 					int stIdx = rand.nextInt(stations.length);
 					stations[stIdx].addPassengerToLine(new Passenger()
 							.setDest(TrainRoute.stationNamePool[rand.nextInt(TrainRoute.numStations)]));
@@ -46,22 +45,21 @@ public class Project3Queue {
 			}
 		});
 		Thread trainDispatcher = new Thread(() -> {
-			Random rand = new Random();
+			ThreadLocalRandom rand = ThreadLocalRandom.current();
 			ExecutorService exSer = Executors.newCachedThreadPool();
 
 			while (true) {
 				Train train = new Train().init(rand.nextInt(8), stations);
 				Integer trainNo = train.getTrainNo();
 				FutureTask<Integer> future = new FutureTask<>(() -> {
-					train.beginRoute(rand.nextInt(6));
+					train.beginRoute(delay);
 				}, trainNo);
 				exSer.execute(future);
 				dispatchedTrains.add(future);
 				System.out.println("Dispatched Train #" + train.getTrainNo());
 
-				//TODO Uncomment the following to fix "insanely fast train creation" bug
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(delay * 1500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

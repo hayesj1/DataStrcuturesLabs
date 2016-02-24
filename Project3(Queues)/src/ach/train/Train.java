@@ -53,11 +53,11 @@ public class Train {
 	public void travel(int delay) throws EmptyQueueException {
 		// Train moves to next stop, drops stop it was just at in TrainRoute
 		try {
-			System.out.println("train #" + this.getTrainNo() + " has departed from " + stops.dequeue());
+			stops.dequeue();
 			currStation = null;
-			Thread.sleep(0 * 1000);
+			Thread.sleep(delay * 1000);
 			this.currStation = stops.getFront();
-			System.out.println("Train #" + this.getTrainNo() + " has arrived at " + this.getCurrStation());
+			if(this.getCurrStation() == null) { throw new EmptyQueueException(); }
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -14,4 +14,5 @@ public class EmptyQueueException extends Exception {
 	public EmptyQueueException(String operation) {
 		super("Cannot do " + operation + " on an empty queue!");
 	}
+	public EmptyQueueException() { super(); }
 }
