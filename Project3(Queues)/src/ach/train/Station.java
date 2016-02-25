@@ -42,6 +42,7 @@ public class Station
         this.name = name;
     }
 
+	public Integer getQueueLength() { return this.queueOfPassengers.getQueueLength(); }
 	/**
 	 * dequeues and returns the first passenger in line
 	 * @return the first passenger in the queue

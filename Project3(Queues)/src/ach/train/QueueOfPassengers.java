@@ -14,22 +14,24 @@ import ach.queue.EmptyQueueException;
  */
 
 public class QueueOfPassengers {
-
+	private Integer length = 0;
 	private CircularArrayQueue<Passenger> passengers;
 
 	public QueueOfPassengers() {
 		passengers = new CircularArrayQueue<>();
 	}
 
-	public CircularArrayQueue<Passenger> getPassengers() {
-		return passengers;
+	public Integer getQueueLength() {
+		return length;
 	}
 
 	public Passenger removePassenger() throws EmptyQueueException {
+		if(length > 0 ) { length--; }
 		return passengers.dequeue();
 	}
 
 	public void addPassenger(Passenger p) {
 		passengers.enqueue(p);
+		length++;
 	}
 }

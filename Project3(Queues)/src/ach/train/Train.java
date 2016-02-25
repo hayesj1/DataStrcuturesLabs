@@ -73,10 +73,18 @@ public class Train {
 	public void offLoad() {
 		// removes passengers
 		if (passengersOnBoard > 0) {
-			if (currStation.isTerminal() && !currStation.getName().equals(firstStation)) { passengers.clear(); }
-			else {
+			int count = 0;
+			if (currStation.isTerminal() && !currStation.getName().equals(firstStation)) {
+				count = passengersOnBoard;
+				passengers.clear();
+			} else {
+				int size = passengers.size();
 				passengers.removeIf(passenger -> (passenger.getDest().equals(currStation)));
+				count = size - passengers.size();
 			}
+			System.out.println("Alighted " + count + " passengers from Train #" + getTrainNo());
+		} else {
+			System.out.println("Train #" + getTrainNo() + " has no passengers to alight");
 		}
 	}
 	public void board() {

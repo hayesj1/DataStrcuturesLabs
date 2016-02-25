@@ -4,7 +4,9 @@ import ach.train.Station;
 import ach.train.Train;
 import ach.train.TrainRoute;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -107,14 +109,16 @@ public class Project3Queue {
 			System.out.println("Starting Train Dispatch System...");
 			arrivalDisplay.start();
 		});
-		int t = displayCounter(dur*60); // show the countdown and animation
+		int t = displayGui(dur*60, TrainRoute.stationPool); // show the countdown and animation
 		exSer.shutdown();
 		continueSim = false;
 		if(t == 0) { exSer.shutdownNow(); }
 
 		if (exSer.awaitTermination(t+5, TimeUnit.SECONDS)) { // +5 to allow any extra output to be flushed
+			// If all threads shutdown properly.
 			System.out.println("Train Route Simulator has shutdown successfully!");
 		} else {
+			// If there is at least one dangling thread
 			System.out.println("Train Route Simulator failed to shutdown successfully!");
 		}
 		System.exit(0);
@@ -123,56 +127,129 @@ public class Project3Queue {
 	/**
 	 * displays a decorative animation with a decorative simulation countdown.
 	 * @param dur the number of seconds to run for
+	 * @param stations
 	 * @return the time remaining; usually 0 unless therre was an unexpected issue
 	 */
-	private static int displayCounter(int dur) {
+	private static int displayGui(int dur, Station[] stations) {
 		JFrame window = new JFrame("Train Route Simulator");
 		Container contentpane = window.getContentPane();
 		JPanel imagePanel = new JPanel();
-		JPanel counterPanel = new JPanel(new BorderLayout(5, 2));
-		JTextField counter = new JTextField(String.valueOf(dur) + " seconds remain in the Simulation");
+		JPanel counterPanel = new JPanel(new BorderLayout(0, 0));
+		JPanel listPanel = new JPanel(new BorderLayout(0, 0));
+		JTextField counter = new JTextField(String.valueOf(dur));
+		JLabel counterL = new JLabel("Seconds until Termination:");
+		DefaultListModel<Pair<Station, Integer>> lm = new DefaultListModel<>();
+		JList<Pair<Station, Integer>> stationlist;
 
 		URL url = Project3Queue.class.getResource("train.gif");
+		URL url2, url3;
 		ImageIcon train = new ImageIcon(url, "Train gif");
 
+		AudioInputStream ais = null;
+		Clip clip = null;
 		Font oldNewspaper = null;
 		try {
-			URL url2 = Project3Queue.class.getResource("OldNewspaperTypes.ttf");
+			url2 = Project3Queue.class.getResource("OldNewspaperTypes.ttf");
 			oldNewspaper = Font.createFont(Font.TRUETYPE_FONT, new File(url2.toURI()));
 			GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(oldNewspaper);
+
+			url3 = Project3Queue.class.getResource("trainWhistle.wav");
+			ais = AudioSystem.getAudioInputStream(url3);
+			Mixer mix = AudioSystem.getMixer(null);
+			clip = AudioSystem.getClip(mix.getMixerInfo());
+			clip.open(ais);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		} catch (UnsupportedAudioFileException e) {
+			e.printStackTrace();
 		}
+
+		for (Station station : stations) {
+			lm.addElement(new Pair<>(station, station.getQueueLength()));
+		}
+		stationlist = new JList<>(lm);
 
 		counter.setEditable(false);
 		counter.setHorizontalAlignment(JTextField.CENTER);
 		counter.setFont(new Font(oldNewspaper.getName(), Font.BOLD, 18));
-		counter.setPreferredSize(new Dimension(50, 26));
+		counter.setBorder(new EmptyBorder(0,0,0,0));
+		counterL.setFont(new Font(oldNewspaper.getName(), Font.BOLD, 18));
+		counterL.setHorizontalAlignment(SwingConstants.TRAILING);
+		counterL.setLabelFor(counter);
+
+		stationlist.setFont(new Font(oldNewspaper.getName(), Font.BOLD, 13));
+		stationlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		counter.setPreferredSize(new Dimension(25, 126));
+		counterL.setPreferredSize(new Dimension(300, 50));
+		stationlist.setPreferredSize(new Dimension(175, 176));
 		imagePanel.setPreferredSize(new Dimension(500, 274));
-		counterPanel.setPreferredSize(new Dimension(500, 26));
+		counterPanel.setPreferredSize(new Dimension(500, 176));
 
 		imagePanel.add(new JLabel(train), SwingConstants.CENTER);
-		counterPanel.add(counter);
+		counterPanel.add(counter, BorderLayout.CENTER);
+		counterPanel.add(counterL, BorderLayout.WEST);
+		listPanel.add(stationlist, BorderLayout.CENTER);
 
 		contentpane.add(imagePanel, BorderLayout.SOUTH);
-		contentpane.add(counterPanel, BorderLayout.NORTH);
+		contentpane.add(counterPanel, BorderLayout.WEST);
+		contentpane.add(listPanel, BorderLayout.EAST);
 
 		window.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		window.pack();
 		window.setVisible(true);
 
 		int i;
+		clip.loop(dur/5); //loops the playback of the whistle
 		for (i = dur; i >= 0; i--) {
-			counter.setText(String.valueOf(i) + " seconds remain in the Simulation");
+			counter.setText(String.valueOf(i));
+			for (int j = 0; j < lm.getSize(); j++) {
+				Pair<Station, Integer> p = lm.get(j);
+				p.setVal(p.getKey().getQueueLength());
+			}
+			stationlist.repaint();
+			if(!window.isActive()) {
+				clip.stop();
+			} else {
+				clip.loop(i/5);
+			}
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {}
 		}
+		clip.close();
 		window.dispose();
 		return i;
+	}
+
+	/**
+	 * A basic pairing of a key to a value
+	 * @param <K> the Key Type
+	 * @param <V> the Value Type
+	 */
+	static class Pair<K, V> {
+		private K key;
+		private V val;
+
+		public Pair(K key, V val) {
+			this.key = key;
+			this.val = val;
+		}
+
+		public K getKey() { return key;	}
+		public V getVal() { return val; }
+
+		public void setVal(V val) { this.val = val; }
+
+		@Override
+		public String toString() {
+			return (key.toString() + ": " + val.toString());
+		}
 	}
 }
