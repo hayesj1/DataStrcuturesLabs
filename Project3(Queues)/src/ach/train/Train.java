@@ -75,7 +75,7 @@ public class Train {
 		if (passengersOnBoard > 0) {
 			if (currStation.isTerminal() && !currStation.getName().equals(firstStation)) { passengers.clear(); }
 			else {
-				passengers.removeIf(passenger -> (passenger.getDest().equals(currStation.getName())));
+				passengers.removeIf(passenger -> (passenger.getDest().equals(currStation)));
 			}
 		}
 	}
@@ -89,7 +89,7 @@ public class Train {
 				passCount++;
 			}
 		} catch (EmptyQueueException e) {
-			System.out.println("All passengers at " + getCurrStation() + " boarded Train #" + getTrainNo());
+			System.out.println("All passengers at " + getCurrStation() + " station boarded Train #" + getTrainNo());
 			return;
 		}
 		System.out.println(passCount + " passengers boarded Train #" + getTrainNo() + " at " + getCurrStation() + " station");
@@ -104,8 +104,8 @@ public class Train {
 	public void setCapacity() { this.capacity = numCars * capacityPerCar; }
 	public void setFirstStation(String name) { this.firstStation = name; }
 	public void setStops(Station[] stations) {
-		for (int i = 0; i < stations.length; i++) {
-			stops.enqueue(stations[i]);
+		for (Station station : stations) {
+			stops.enqueue(station);
 		}
 	}
 }

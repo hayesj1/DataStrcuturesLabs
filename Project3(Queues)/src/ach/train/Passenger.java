@@ -11,13 +11,17 @@ package ach.train;
 
 public class Passenger
 {
-    private String dest;
+    private Station dest;
 
-    public String getDest() {
+	public Passenger(Station dest) {
+		this.dest = dest;
+	}
+
+	public Station getDest() {
         return dest;
     }
 
-    public Passenger setDest(String dest) {
+    public Passenger setDest(Station dest) {
         this.dest = dest;
 	    return this;
     }

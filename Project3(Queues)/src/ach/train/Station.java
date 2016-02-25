@@ -56,10 +56,13 @@ public class Station
 	 * @param rand the random to use for randomizing the destination and number of passengers to add
 	 */
 	public void addPassengerToLine(ThreadLocalRandom rand) {
-		int numPassengers = rand.nextInt(10);
+		int numPassengers;
+		do {
+			numPassengers = rand.nextInt(10);
+		} while (numPassengers == 0); // guarantees at least 1 passenger is added
+
 		for (int i = 0; i < numPassengers; i++) {
-			queueOfPassengers.addPassenger(new Passenger()
-					.setDest(TrainRoute.stationNamePool[rand.nextInt(TrainRoute.numStations)]));
+			queueOfPassengers.addPassenger(new Passenger(TrainRoute.stationPool[rand.nextInt(TrainRoute.numStations)]));
 		}
 
 	}
@@ -67,5 +70,16 @@ public class Station
 	@Override
 	public String toString() {
 		return this.getName();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) { return false; }
+		else if(obj == this) { return true; }
+		else if(!(obj instanceof Station)) { return false; }
+
+		Station other = (Station) obj;
+
+		return (this.getName().equals(other.getName()));
 	}
 }
