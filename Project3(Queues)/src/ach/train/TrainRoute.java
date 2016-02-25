@@ -16,7 +16,7 @@ public class TrainRoute
 	public static final int numStations = 9;
 	public static final Station[] stationPool = new Station[numStations];
     public static  final String[] stationNamePool = {"Red", "Blue", "Yellow","Cyan","Magenta","Green","White","Black","Rainbow"};
-    private boolean[] stationNameUsed = { false, false, false, false, false, false, false, false, false };
+    private boolean[] stationNameUsed = { false, false, false, false, false, false, false, false, false }; //prevents repeated station names
 
 	public TrainRoute() {
 	    Random rand = new Random();

@@ -4,6 +4,7 @@ import ach.queue.CircularArrayQueue;
 import ach.queue.EmptyQueueException;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
@@ -16,6 +17,7 @@ import java.util.ArrayList;
  */
 public class Train {
 	public static final int capacityPerCar = 25;
+	private static final int MAX_CARS = 7;
 	/**
 	 * allows easy calculation of Train Number
 	 *
@@ -32,6 +34,41 @@ public class Train {
 	private CircularArrayQueue<Station> stops = new CircularArrayQueue<>();
 	private Station currStation = null;
 	private String firstStation = "";
+
+	public Train(ThreadLocalRandom rand, Station[] stations) {
+		this.trainNo = numTrains++;
+		this.setNumCars(rand.nextInt(MAX_CARS+1));
+		this.setStops(stations);
+		this.setCapacity();
+		this.setFirstStation(stops.getFront().getName());
+	}
+
+	public void beginRoute(int delay) {
+		try {
+			while (!this.stops.isEmpty()) {
+				this.travel(delay);
+				this.offLoad();
+				this.board();
+			}
+		} catch (EmptyQueueException e) {
+			System.out.println("Train #" + this.getTrainNo() + " is now out of service!");
+			return;
+		}
+	}
+
+	public void travel(int delay) throws EmptyQueueException {
+		// Train moves to next stop, drops stop it was just at in TrainRoute
+		try {
+			stops.dequeue();
+			currStation = null;
+			Thread.sleep(delay * 1000);
+			this.currStation = stops.getFront();
+			if(this.getCurrStation() == null) { throw new EmptyQueueException(); }
+		} catch (InterruptedException e) {
+			return;
+			//e.printStackTrace();
+		}
+	}
 
 	public void offLoad() {
 		// removes passengers
@@ -56,43 +93,6 @@ public class Train {
 			return;
 		}
 		System.out.println(passCount + " passengers boarded Train #" + getTrainNo() + " at " + getCurrStation() + " station");
-	}
-
-	public void travel(int delay) throws EmptyQueueException {
-		// Train moves to next stop, drops stop it was just at in TrainRoute
-		try {
-			stops.dequeue();
-			currStation = null;
-			Thread.sleep(delay * 1000);
-			this.currStation = stops.getFront();
-			if(this.getCurrStation() == null) { throw new EmptyQueueException(); }
-		} catch (InterruptedException e) {
-			return;
-			//e.printStackTrace();
-		}
-	}
-
-	public void beginRoute(int delay) {
-		try {
-			while (!this.stops.isEmpty()) {
-				this.travel(delay);
-				this.offLoad();
-				this.board();
-			}
-		} catch (EmptyQueueException e) {
-			System.out.println("Train #" + this.getTrainNo() + " is now out of service!");
-			return;
-		}
-	}
-
-	public Train init(int numCars, Station[] stations) {
-		this.trainNo = numTrains++;
-		this.setNumCars(numCars);
-		this.setStops(stations);
-		this.setCapacity();
-		this.setFirstStation(stops.getFront().getName());
-
-		return this;
 	}
 
 	public int getNumCars() { return numCars; }

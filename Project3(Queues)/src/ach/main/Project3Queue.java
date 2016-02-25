@@ -26,38 +26,50 @@ import java.util.concurrent.*;
 public class Project3Queue {
 
 	private static ArrayList<FutureTask<Integer>> dispatchedTrains = new ArrayList<>();
+	/**
+	 * controls travel time for trains
+	 */
 	private static int delay = -1;
-	private static boolean createMoreTrains = true;
+	/**
+	 * True as long as the simulation should continue
+	 */
+	private static boolean continueSim = true;
 
 	public static void main(String[] args) throws InterruptedException {
 		System.out.println("Welcome to the Train Route Simulator!");
 		System.out.println("How many minutes for the simulation run for?");
 		Scanner s = new Scanner(System.in);
-		int dur = s.nextInt();
+		int dur = s.nextInt(); // grab the simulation's duration from the user
+
+		// set travel time; but keep it from having a value of 0
 		do {
 			delay = ThreadLocalRandom.current().nextInt(6);
 		} while (delay == 0);
 		TrainRoute trainRoute = new TrainRoute();
 		Station[] stations = TrainRoute.stationPool;
 
-		ExecutorService exSer = Executors.newCachedThreadPool();
+		ExecutorService exSer = Executors.newCachedThreadPool();// controls and adds multithreaded functionality to allow
+																// regular train dispatches, random passenger enqueueings,
+																// and notification when a train has gone out of service
 
+		// adds passenger(s) to a random station
 		Thread passengerAdder = new Thread(() -> {
 			ThreadLocalRandom rand = ThreadLocalRandom.current();
-			while (true) {
+			while (!exSer.isShutdown() && continueSim) {
 				try {
 					int stIdx = rand.nextInt(stations.length);
 					stations[stIdx].addPassengerToLine(rand);
-					//System.out.println("Added Passenger to " + stations[stIdx].getName() + " Station");
+					//System.out.println("Added Passenger to " + stations[stIdx].getName() + " Station"); //debug output
 					Thread.sleep(rand.nextInt(3) * 1000);
 				} catch (InterruptedException e) {}
 			}
 		});
+		// dispatches new trains
 		Thread trainDispatcher = new Thread(() -> {
 			ThreadLocalRandom rand = ThreadLocalRandom.current();
 
-			while (!exSer.isShutdown() && createMoreTrains) {
-				Train train = new Train().init(rand.nextInt(8), stations);
+			while (!exSer.isShutdown() && continueSim) {
+				Train train = new Train(rand, stations);
 				Integer trainNo = train.getTrainNo();
 				FutureTask<Integer> future = new FutureTask<>(() -> {
 					train.beginRoute(delay);
@@ -73,6 +85,7 @@ public class Project3Queue {
 				}
 			}
 		});
+		// outputs a line to stdout when a train completes the route
 		Thread arrivalDisplay = new Thread(() -> {
 			do {
 				dispatchedTrains.forEach(train -> {
@@ -88,18 +101,18 @@ public class Project3Queue {
 			} while (!dispatchedTrains.isEmpty());
 		});
 
-		exSer.execute(() -> {
+		exSer.execute(() -> { // Start the simulation
 			passengerAdder.start();
 			trainDispatcher.start();
 			System.out.println("Starting Train Dispatch System...");
 			arrivalDisplay.start();
 		});
-		int t = displayCounter(dur*60);
+		int t = displayCounter(dur*60); // show the countdown and animation
 		exSer.shutdown();
-		createMoreTrains = false;
+		continueSim = false;
 		if(t == 0) { exSer.shutdownNow(); }
 
-		if (exSer.awaitTermination(t+5, TimeUnit.SECONDS)) {
+		if (exSer.awaitTermination(t+5, TimeUnit.SECONDS)) { // +5 to allow any extra output to be flushed
 			System.out.println("Train Route Simulator has shutdown successfully!");
 		} else {
 			System.out.println("Train Route Simulator failed to shutdown successfully!");
@@ -107,6 +120,11 @@ public class Project3Queue {
 		System.exit(0);
 	}
 
+	/**
+	 * displays a decorative animation with a decorative simulation countdown.
+	 * @param dur the number of seconds to run for
+	 * @return the time remaining; usually 0 unless therre was an unexpected issue
+	 */
 	private static int displayCounter(int dur) {
 		JFrame window = new JFrame("Train Route Simulator");
 		Container contentpane = window.getContentPane();
