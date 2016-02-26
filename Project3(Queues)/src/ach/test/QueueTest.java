@@ -47,12 +47,12 @@ public class QueueTest {
 		System.out.println(test1.isEmpty());
 
 		CircularArrayQueue<Integer> test2 = new CircularArrayQueue<Integer>();
-		for(int i = 0; i < 40; i++)
+		for(int i = 0; i < 41; i++)
 		{
 			test2.enqueue(i);
 		}
 
-		for(int i = 0; i < 40; i++)
+		for(int i = 0; i < 41; i++)
 		{
 			System.out.println(test2.dequeue());
 		}
