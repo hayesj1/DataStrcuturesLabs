@@ -1,0 +1,10 @@
+dog
+bacon
+cat
+apple
+microsoft
+oracle
+copyright
+trademark
+zombie
+lion

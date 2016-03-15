@@ -60,5 +60,11 @@ $RECYCLE.BIN/
 
 .idea/
 *.iml
+*.sql
+
 Lab1/src.zip
 Lab1/runnig_instructions.txt
+DerbyTest*/
+out/protduction/derbyTest/
+Project1(Bag)/derby.log
+derby.log
