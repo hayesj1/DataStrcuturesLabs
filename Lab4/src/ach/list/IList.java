@@ -54,7 +54,7 @@ public interface IList<E> {
 	 */
 	E getEntry(int position);
 
-	boolean contains();
+	boolean contains(E value);
 	boolean isEmpty();
 
 	void clear();
