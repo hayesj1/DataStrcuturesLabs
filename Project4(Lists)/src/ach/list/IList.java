@@ -43,7 +43,7 @@ public interface IList<E> {
 	 * @throws IndexOutOfBoundsException if either givenPosition < 0 or
 	 * givenPosition >= getLength()
 	 */
-	E replace (int position, E newEntry);
+	E replace(int position, E newEntry);
 
 	/**
 	 * Gets the entry at the specified position
@@ -54,7 +54,7 @@ public interface IList<E> {
 	 */
 	E getEntry(int position);
 
-	boolean contains();
+	boolean contains(E value);
 	boolean isEmpty();
 
 	void clear();
