@@ -1,5 +1,7 @@
 package ach.card;
 
+import ach.test.Testable;
+
 /**
  * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
  *
@@ -9,7 +11,7 @@ package ach.card;
  *         <p>
  *         Created by hayesj3 on 3/18/2016.
  */
-public class Card implements Comparable<Card>{
+public class Card implements Comparable<Card>, Testable{
 
 	private Suit suit;
 	private Values value;
@@ -48,4 +50,10 @@ public class Card implements Comparable<Card>{
 
 	public void setSuit(Suit suit) { this.suit = suit; }
 	public void setValue(Values value) { this.value = value; }
+
+
+	@Override
+	public boolean test() {
+		return true;
+	}
 }
