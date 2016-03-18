@@ -1,5 +1,7 @@
 package ach.main;
+import ach.list.DLList;
 
+import java.io.*;
 /**
  * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
  *
@@ -13,6 +15,16 @@ public class Lab4 {
 
 	public static void main(String[] args) {
 		//TODO replace this with code that reads from the text file, adding each word to a DLList<String> and then tests all the methods
+
+		FileInputStream fileInput = null;
+		DLList<String> testDLL = new DLList<>();
+
+
+		try{
+			fileInput = new FileInputStream("input.txt");
+
+			//TODO add reading code
+		}
 		System.out.println("Hello World");
 	}
 }
