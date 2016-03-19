@@ -19,8 +19,10 @@ public class ProjectTest {
 	public static void main(String[] args) {
 		Card[] cards = new Card[3];
 		CardPile pile = new CardPile();
+		CardPile pile2 = new CardPile(cards);
 		Deck deck = new Deck();
-		Hand hand = new Hand();
+		Deck deck2 = new Deck(pile2);
+		Hand hand = new Hand(deck, deck2);
 
 		Testable.test(cards[0]);
 		Testable.test(pile);

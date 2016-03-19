@@ -115,8 +115,7 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 		boolean found = false;
 		try {
 			for (int i = 0; !found && i < getLength() + 1; i++) {
-				E val = iterator().next();
-				if (val.equals(value)) {
+				if (iterator().next().equals(value)) {
 					found = true;
 				}
 			}

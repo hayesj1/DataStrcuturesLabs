@@ -3,6 +3,9 @@ package ach.card;
 import ach.list.DoubleLinkedList;
 import ach.test.Testable;
 
+import java.util.Iterator;
+import java.util.Random;
+
 /**
  * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
  *
@@ -13,20 +16,40 @@ import ach.test.Testable;
  *         Created by hayesj3 on 3/18/2016.
  */
 public class CardPile implements Testable {
-	DoubleLinkedList<Card> cards;
+	protected DoubleLinkedList<Card> cards;
 
 	public CardPile() {
 		cards = new DoubleLinkedList<>();
 	}
 	public CardPile(Card[] cards) {
 		this();
-		for (Card card : cards) { this.cards.add(card); }
+		if(cards != null) {
+			for (Card card : cards) {
+				this.cards.add(card);
+			}
+		}
 	}
 
 	/** Returns the top-most card in the pile **/
-	public Card drawCard() { return cards.remove(0); }
+	protected Card removeCard() { return cards.remove(0); }
 	/** Adds a card to the bottom of the pile **/
-	public void discard(Card card) { cards.add(card);}
+	protected void addCard(Card card) { cards.add(card);}
+
+	/**
+	 * Finds the position of the given card in the pile
+	 * @param c the card to search for
+	 * @return the position of the card if found; -1 otherwise
+	 */
+	public int search(Card c) {
+		if (!cards.contains(c)) {
+			return -1;
+		} else {
+			int pos;
+			Iterator<Card> it = cards.iterator();
+			for (pos = 0; !(it.next().equals(c)) && pos < cards.getLength(); pos++);
+			return pos;
+		}
+	}
 
 	/**
 	 * Spilts the pile into two halves
@@ -55,12 +78,43 @@ public class CardPile implements Testable {
 		return ret;
 	}
 
+	/**
+	 * Shuffles the cards in this CardPile
+	 * @param passes the number of times to shuffle; a minimum of 2 passes will always be executed
+	 */
+	public void shuffle(int passes) {
+		if (passes < 2) { passes = 2; }
+
+		Random rand = new Random(System.currentTimeMillis());
+		for (int i = 0; i < passes; i++) {
+			for (int j = 0; j < cards.getLength()/2; j++) {
+				int pos = j + rand.nextInt(cards.getLength() - j);
+				Card first = cards.getEntry(j);
+				Card second = cards.replace(pos, first);
+				cards.replace(j, second);
+
+			}
+		}
+	}
+
 	public Card getTopCard() { return cards.getEntry(0); }
 	public Card getBottomCard() { return cards.getEntry(cards.getLength()); }
 
+	@Override
+	public String toString() {
+		StringBuilder strBlder = new StringBuilder();
+		for (Card c : cards) {
+			strBlder.append(c);
+			strBlder.append('\n');
+		}
+		return strBlder.toString();
+	}
 
 	@Override
 	public boolean test() {
+		System.out.println("Testing class: CardPile");
+		//TODO add actual testing here
+
 		return true;
 	}
 }

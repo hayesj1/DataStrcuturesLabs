@@ -13,11 +13,30 @@ import ach.test.Testable;
  */
 public class Deck extends CardPile implements Testable {
 
+	public Deck() {
+		for (Suits suit : Suits.values()) {
+			for (Faces face : Faces.values()) {
+				cards.add(new Card(suit, face));
+			}
+		}
+	}
 
+	public Deck(CardPile pile) {
+		this(pile.cards.toArray());
+	}
+	public Deck(Card[] cards) {
+		super(cards);
+	}
+
+	public Card drawCard() { return removeCard(); }
+	public void discardCard(Card card) { addCard(card); }
 
 
 	@Override
 	public boolean test() {
+		System.out.println("Testing class: Deck");
+		//TODO add actual testing here
+
 		return true;
 	}
 }

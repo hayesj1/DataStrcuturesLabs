@@ -9,7 +9,7 @@ package ach.card;
  *         <p>
  *         Created by hayesj3 on 3/18/2016.
  */
-public enum Suit {
+public enum Suits {
 	DIAMOND,
 	HEART,
 	SPADE,
