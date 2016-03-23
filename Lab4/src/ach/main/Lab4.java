@@ -1,6 +1,7 @@
 package ach.main;
 
 import ach.list.DLList;
+import ach.list.iterator.IIterator;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -20,55 +21,56 @@ import java.util.Arrays;
 public class Lab4 {
 
 	public static void main(String[] args) {
-		//TODO finsh this code that reads from the text file, adding each word to a DLList<String> and then tests all the methods
-
-		BufferedReader reader = null;
 		DLList<String> testDLL = new DLList<>();
 
-
-		try{
-			reader = new BufferedReader(new FileReader("words.txt"));
-			testDLL.add(reader.readLine());
+		try(BufferedReader reader = new BufferedReader(new FileReader("Lab4/words.txt"))) {
+			String line;
+			while((line = reader.readLine()) != null) {
+				testDLL.add(line);
+				System.out.println("Read in and added \'" + line + "\' to Double Lined List");
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("The DLL contains: " + Arrays.toString(testDLL.toArray()));
 
-		//TODO add test code to demonstrate DLL.
 
-		System.out.println("Add test, adds burrito to end.");
-		testDLL.add("burrito");
-		System.out.println(Arrays.toString(testDLL.toArray()));
+		IIterator<String> it = testDLL.getCustomIterator();
+		System.out.println("Iterator Testing:");
+		System.out.println("Next: " + it.next());
+		System.out.println("Has Previous: " + it.hasPrevious());
+		System.out.println("Next Index: " + it.nextIndex());
+		String next = it.next();
+		System.out.println("Next: " + next);
+		it.remove();
+		System.out.println("Remove: " + next);
+		System.out.println("The final state of the list: " + Arrays.toString(testDLL.toArray()));
 
-		System.out.println("Add avacado after bob.");
-		testDLL.add(1, "avacado");
-		System.out.println(Arrays.toString(testDLL.toArray()));
 
+		System.out.println("DLL Testing:");
 		System.out.println("Removes Zombie");
-		testDLL.remove(4);
+		testDLL.remove(3);
 		System.out.println(Arrays.toString(testDLL.toArray()));
 
-		System.out.println("replace test, replaces bob with bill");
+		System.out.println("Replace: replaces bob with bill");
 		testDLL.replace(0, "bill");
 		System.out.println(Arrays.toString(testDLL.toArray()));
 
-		System.out.println("getEntry test, gets entry at position 5");
+		System.out.println("Get Entry: gets entry at position 5");
 		System.out.println(testDLL.getEntry(5));
 
-		System.out.println("Contains test, checks for burger");
-		System.out.println(testDLL.contains("burger"));
+		System.out.println("Contains \'burger\'? " + testDLL.contains("burger"));
 
-		System.out.println(testDLL.isEmpty());
-		System.out.println(testDLL.getLength());
+		System.out.println("Empty? " + testDLL.isEmpty());
+		System.out.println("Length? " + testDLL.getLength());
 
 		testDLL.clear();
+		System.out.println("DLL Cleared!");
 
-		System.out.println(testDLL.isEmpty());
-		System.out.println(testDLL.getLength());
-
-
-
+		System.out.println("Empty? " + testDLL.isEmpty());
+		System.out.println("Length? " + testDLL.getLength());
 
 	}
 }

@@ -27,35 +27,36 @@ public class DLList<E> implements IList<E>, CustomIterable<E> {
 		first = null;
 		last = null;
 		size = 0;
-		initialized = true;
+		initialized = false;
 	}
 	private void init(E data) {
-		first = new Node(data, null, null);
-		last = first;
+		first = new Node(data, null, last);
+		last = null;
 		size = 1;
 		initialized = true;
 	}
 
 	@Override
 	public void add(E newEntry) {
-		if(!initialized) {
+		if(!initialized || isEmpty()) {
 			init(newEntry);
-		} else if (isEmpty()) {
-			first.setData(newEntry);
 		} else {
-			Node temp = new Node(newEntry, last, null);
-			last.setNext(temp);
-			last = temp;
+			if (last == null) {
+				last = new Node(newEntry, first, null);
+				first.setNext(last);
+			} else {
+				Node temp = new Node(newEntry, last, null);
+				last.setNext(temp);
+				last = temp;
+			}
 			size++;
 		}
 	}
 
 	@Override
 	public void add(int position, E newEntry) {
-		if(!initialized) {
+		if(!initialized || isEmpty()) {
 			init(newEntry);
-		} else if (isEmpty()) {
-			first.setData(newEntry);
 		} else {
 			IIterator<E> iterator = getCustomIterator();
 			for (int i = 0; i < position; i++, iterator.next()) ;
@@ -71,7 +72,7 @@ public class DLList<E> implements IList<E>, CustomIterable<E> {
 		} else {
 			E data = null;
 			IIterator<E> iterator = getCustomIterator();
-			for (int i = 0; i < position - 1; i++, iterator.next()) ;
+			for (int i = 0; i < position; i++, iterator.next()) ;
 			data = iterator.next();
 			iterator.remove();
 			size--;
@@ -87,7 +88,7 @@ public class DLList<E> implements IList<E>, CustomIterable<E> {
 		} else {
 			E data = null;
 			IIterator<E> iterator = getCustomIterator();
-			for (int i = 0; i < position - 1; i++, iterator.next()) ;
+			for (int i = 0; i < position; i++, iterator.next()) ;
 			data = iterator.next();
 			iterator.set(newEntry);
 			return data;
@@ -136,18 +137,16 @@ public class DLList<E> implements IList<E>, CustomIterable<E> {
 
 	@Override
 	public E[] toArray() {
-		E[] arr = (E[]) new Object[getLength()];
+		E[] arr = (E[]) new Object[size];
 		IIterator<E> iterator = getCustomIterator();
 
-		for (int i = 0; i < getLength(); i++) { arr[i] = iterator.next(); }
+		for (int i = 0; i < size -1; i++) { arr[i] = iterator.next(); }
 
 		return arr;
 	}
 
 	@Override
-	public int getLength() {
-		return size;
-	}
+	public int getLength() { return size; }
 
 	@Override
 	public IIterator<E> getCustomIterator() {
@@ -181,7 +180,7 @@ public class DLList<E> implements IList<E>, CustomIterable<E> {
 		private boolean hasPrevBeenCalled;
 
 		public ListIterator() {
-			this.currNode = first;
+			this.currNode = null;
 			this.currIdx = -1;
 			this.hasNextBeenCalled = false;
 			hasPrevBeenCalled = false;
@@ -190,8 +189,14 @@ public class DLList<E> implements IList<E>, CustomIterable<E> {
 
 		@Override
 		public E next() throws NoSuchElementException {
-			E data = currNode.getNext().getData();
-			currNode = currNode.getNext();
+			Node temp;
+			if(currNode == null) {
+				temp = first;
+			} else {
+				temp = currNode.getNext();
+			}
+			E data = temp.getData();
+			currNode = temp;
 			currIdx++;
 			hasNextBeenCalled = true;
 			return data;
@@ -208,11 +213,11 @@ public class DLList<E> implements IList<E>, CustomIterable<E> {
 
 		@Override
 		public boolean hasNext() {
-			return currNode.getNext() != null;
+			return currIdx < getLength() || currNode.getNext() != null;
 		}
 		@Override
 		public boolean hasPrevious() {
-			return currNode.getPrev() != null;
+			return currIdx > 0 || currNode.getPrev() != null;
 		}
 
 		@Override
@@ -231,7 +236,6 @@ public class DLList<E> implements IList<E>, CustomIterable<E> {
 			if (hasNextBeenCalled || hasPrevBeenCalled) {
 				currNode.getNext().setPrev(currNode.getPrev());
 				currNode.getPrev().setNext(currNode.getNext());
-				currIdx--;
 				//data = currNode.getData();    //uncomment to return removed node's data
 				currNode = currNode.getNext();
 				hasNextBeenCalled = false;
