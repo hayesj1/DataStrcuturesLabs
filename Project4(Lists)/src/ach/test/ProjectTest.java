@@ -22,7 +22,7 @@ public class ProjectTest {
 		CardPile pile2 = new CardPile(cards);
 		Deck deck = new Deck();
 		Deck deck2 = new Deck(pile2);
-		Hand hand = new Hand(deck, deck2);
+		Hand hand = new Hand();
 
 		Testable.test(cards[0]);
 		Testable.test(pile);

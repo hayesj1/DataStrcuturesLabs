@@ -1,5 +1,6 @@
 package ach.game;
 
+import ach.card.Card;
 import ach.card.Hand;
 import ach.test.Testable;
 
@@ -14,11 +15,46 @@ import ach.test.Testable;
  */
 public class Player implements Testable{
 
-	private Hand hand;
+	private static int numPlayers = 0;
 
-	public Player(Hand hand) {
-		this.hand = hand;
+	private int playerID;
+	private String name;
+	private Hand hand;
+	private Stash stash;
+
+	public Player(String name) {
+		this.playerID = ++numPlayers;
+		this.name = name;
+		this.hand = new Hand();
+		this.stash = new Stash();
 	}
+
+	public void addCardToHand(Card c) {
+		this.hand.receiveCard(c);
+	}
+	public Card passCard(Card c) {
+		return this.hand.removeCard(c);
+	}
+
+	public void addChips(int orange, int black, int green, int blue, int red, int white) {
+		this.stash.addChips(Chips.Purple, orange);
+		this.stash.addChips(Chips.Black, black);
+		this.stash.addChips(Chips.Green, green);
+		this.stash.addChips(Chips.Blue, blue);
+		this.stash.addChips(Chips.Red, red);
+		this.stash.addChips(Chips.White, white);
+	}
+
+	public void addWinnings(int winnings) {
+		this.stash.addValue(winnings);
+	}
+
+	@Override
+	public String toString() {
+		return ("Player " + name + "'s stash has a value of " +
+				stash.getTotalValue() + ", and chips:\n" + stash.toString());
+	}
+
 
 	@Override
 	public boolean test() {

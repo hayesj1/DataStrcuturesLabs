@@ -21,7 +21,7 @@ public class Card implements Comparable<Card>, Testable{
 		this.suit = suit;
 		this.face = Faces.valueOf(face);
 
-		if (this.face == null || (this.suit == Suits.JOKER && this.face != Faces.JOKER)) {
+		if (this.face == null) {
 			throw new IllegalArgumentException("Invalid face, " + face + "/" + this.face + ", for Suit: " + this.getSuit());
 		}
 	}
@@ -29,6 +29,14 @@ public class Card implements Comparable<Card>, Testable{
 	public Card(Suits suit, Faces face) {
 		this.suit = suit;
 		this.face = face;
+	}
+
+	public boolean sameSuit(Card c) {
+		return this.getSuit().equals(c.getSuit());
+	}
+
+	public boolean exactEquals(Card c) {
+		return (this.sameSuit(c) && this.equals(c));
 	}
 
 	@Override
@@ -43,7 +51,7 @@ public class Card implements Comparable<Card>, Testable{
 		else if (!(obj instanceof Card)) { return false; }
 
 		Card other = (Card) obj;
-		return ((this.getSuit().equals(other.getSuit())) && (this.getFace().equals(other.getFace())));
+		return (this.getFace().equals(other.getFace()));
 	}
 
 	@Override
@@ -64,21 +72,21 @@ public class Card implements Comparable<Card>, Testable{
 		Card card = new Card(Suits.SPADE, Faces.KING);
 		System.out.println(card);
 
-		card.setFace(Faces.JOKER);
-		card.setSuit(Suits.JOKER);
-		System.out.println("card : " + card);
-		System.out.println("card.getSuit() : " + card.getSuit());
-		System.out.println("card.getFace() : " + card.getFace());
+		card.setFace(Faces.TWO);
+		card.setSuit(Suits.HEART);
+		System.out.println(card);
+		System.out.println(card + ", Suit = " + card.getSuit());
+		System.out.println(card + ", Face = " + card.getFace());
 
-		Card copy = new Card(Suits.JOKER, Faces.JOKER);
-		System.out.println("Joker == Joker : " + card.equals(copy));
+		Card copy = new Card(Suits.DIAMOND, Faces.TWO);
+		System.out.println(card + " == " + copy + " : " + card.equals(copy));
 
 		Card card2 = new Card(Suits.DIAMOND, Faces.FOUR);
 		Card card3 = new Card(Suits.DIAMOND, Faces.FIVE);
-		System.out.println("Card A : " + card2);
-		System.out.println("Card B : " + card3);
-		System.out.println("A.compareTo(B) : " + card2.compareTo(card3));
-		System.out.println("A == B : " + card2.equals(card3));
+		System.out.println(card2);
+		System.out.println(card3);
+		System.out.println(card2 + " compareTo " + card3 + " : " + card2.compareTo(card3));
+		System.out.println(card2 + " == " + card3 + " : " + card2.equals(card3));
 
 		return true;
 	}

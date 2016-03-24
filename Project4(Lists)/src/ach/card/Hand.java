@@ -1,5 +1,6 @@
 package ach.card;
 
+import ach.game.Stash;
 import ach.test.Testable;
 
 /**
@@ -12,27 +13,17 @@ import ach.test.Testable;
  *         Created by hayesj3 on 3/18/2016.
  */
 public class Hand extends CardPile implements Testable{
-	Deck drawDeck;
-	Deck discardDeck;
 
-	public Hand(Deck drawDeck, Deck discardDeck) {
-		this.drawDeck = drawDeck;
-		this.discardDeck = discardDeck;
+	Stash stash;
+
+	public Hand() {
+		this.stash = new Stash();
 	}
 
-	public void Draw() {
-		addCard(drawDeck.drawCard());
+	public void receiveCard(Card card) {
+		addCard(card);
 	}
-	public void Discard(Card card) {
-		discardDeck.discardCard(removeCard(card));
-	}
-
-	@Override
-	public String toString() {
-		return ("Your Hand:\n" + super.toString());
-	}
-
-	protected Card removeCard(Card card) {
+	public Card removeCard(Card card) {
 		int pos = search(card);
 
 		if(pos == -1) {
@@ -41,6 +32,20 @@ public class Hand extends CardPile implements Testable{
 			return cards.remove(pos);
 		}
 	}
+
+	protected void computeRanking() {
+
+	}
+
+	public Card[] toArray() {
+		return cards.toArray();
+	}
+
+	@Override
+	public String toString() {
+		return ("Your Hand:\n" + super.toString());
+	}
+
 
 	@Override
 	public boolean test() {

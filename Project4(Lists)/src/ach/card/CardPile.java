@@ -16,6 +16,9 @@ import java.util.Random;
  *         Created by hayesj3 on 3/18/2016.
  */
 public class CardPile implements Testable {
+
+	public static final int MINIMUM_PASSES = 2;
+
 	protected DoubleLinkedList<Card> cards;
 
 	public CardPile() {
@@ -80,10 +83,16 @@ public class CardPile implements Testable {
 
 	/**
 	 * Shuffles the cards in this CardPile
+	 */
+	public void shuffle() {
+		this.shuffle(MINIMUM_PASSES);
+	}
+	/**
+	 * Shuffles the cards in this CardPile
 	 * @param passes the number of times to shuffle; a minimum of 2 passes will always be executed
 	 */
 	public void shuffle(int passes) {
-		if (passes < 2) { passes = 2; }
+		if (passes < MINIMUM_PASSES) { passes = MINIMUM_PASSES; }
 
 		Random rand = new Random(System.currentTimeMillis());
 		for (int i = 0; i < passes; i++) {

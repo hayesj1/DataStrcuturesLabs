@@ -10,8 +10,6 @@ package ach.card;
  *         Created by hayesj3 on 3/18/2016.
  */
 public enum Faces {
-	JOKER,
-	ACEL,
 	TWO,
 	THREE,
 	FOUR,
@@ -20,22 +18,17 @@ public enum Faces {
 	SEVEN,
 	EIGHT,
 	NINE,
+	TEN,
 	JACK,
 	QUEEN,
 	KING,
-	ACEH;
+	ACE;
 
 
 	public static Faces valueOf(int val) {
-		Faces value = null;
+		Faces value;
 
 		switch(val) {
-			case 0:
-				value = JOKER;
-				break;
-			case 1:
-				value = ACEL;
-				break;
 			case 2:
 				value = TWO;
 				break;
@@ -61,17 +54,19 @@ public enum Faces {
 				value = NINE;
 				break;
 			case 10:
-				value = JACK;
+				value = TEN;
 				break;
 			case 11:
-				value = QUEEN;
+				value = JACK;
 				break;
 			case 12:
-				value = KING;
+				value = QUEEN;
 				break;
 			case 13:
-				value = ACEH;
+				value = KING;
 				break;
+			case 14:
+				value = ACE;
 			default:
 				value = null;
 				break;

@@ -1,5 +1,7 @@
 package ach.card;
 
+import ach.game.Anaconda;
+import ach.game.Player;
 import ach.test.Testable;
 
 /**
@@ -13,6 +15,8 @@ import ach.test.Testable;
  */
 public class Deck extends CardPile implements Testable {
 
+	public static final int NUM_PASSES_ON_DEAL = 4;
+	
 	public Deck() {
 		for (Suits suit : Suits.values()) {
 			for (Faces face : Faces.values()) {
@@ -28,8 +32,15 @@ public class Deck extends CardPile implements Testable {
 		super(cards);
 	}
 
-	public Card drawCard() { return removeCard(); }
-	public void discardCard(Card card) { addCard(card); }
+	public void deal(Player[] players) {
+		for (int i = 0; i < Anaconda.NUM_CARDS_DEALT; i++) {
+			for (Player p : players) {
+				p.addCardToHand(dealCard());
+			}
+		}
+	}
+	
+	protected Card dealCard() { return removeCard(); }
 
 
 	@Override
