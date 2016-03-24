@@ -110,9 +110,10 @@ public class DLList<E> implements IList<E>, CustomIterable<E> {
 	@Override
 	public boolean contains(E value) {
 		boolean found = false;
+		IIterator<E> iterator = getCustomIterator();
 		try {
 			for (int i = 0; !found && i < getLength() + 1; i++) {
-				E val = iterator().next();
+				E val = iterator.next();
 				if (val.equals(value)) {
 					found = true;
 				}
