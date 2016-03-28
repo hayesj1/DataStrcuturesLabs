@@ -152,6 +152,12 @@ public class CardPile implements Testable {
 		System.out.println(testPile.getTopCard().toString());
 		System.out.println(testPile.getBottomCard().toString());
 
+		CardPile[] newPiles = testPile.split();
+
+		System.out.println(newPiles[0].toString());
+		System.out.println(newPiles[1].toString());
+
+
 
 		return true;
 	}
