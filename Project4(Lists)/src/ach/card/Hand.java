@@ -51,6 +51,23 @@ public class Hand extends CardPile implements Testable{
 	public boolean test() {
 		System.out.println("Testing class: Hand");
 		//TODO add actual testing here
+		Hand testHand = new Hand();
+		Card testCard = new Card( Suits.CLUB,Faces.TWO );
+		Card testCard2 = new Card(Suits.DIAMOND, Faces.KING);
+
+		System.out.println(testHand.toString());
+		testHand.addCard(testCard);
+		testHand.removeCard();
+		System.out.println(testHand.toString());
+
+		testHand.addCard(testCard);
+		testHand.addCard(testCard2);
+		System.out.println(testHand.toString());
+
+		testHand.removeCard(testCard);
+		System.out.println(testHand.toString());
+
+
 
 		return true;
 	}
