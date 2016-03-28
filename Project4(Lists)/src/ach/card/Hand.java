@@ -74,8 +74,11 @@ public class Hand extends CardPile implements Testable{
 		System.out.println(testHand.toString());
 
 		testHand.addCard(testCard);
-		testHand.computeRanking();
-
+		testHand.addCard(testCard);
+		testHand.addCard(testCard);
+		testHand.addCard(testCard2);
+		Ranking testRank = testHand.computeRanking();
+		System.out.println(testRank);
 		System.out.println(Arrays.toString(testHand.toArray()));
 
 
