@@ -2,6 +2,7 @@ package ach.card;
 
 import ach.test.Testable;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -55,7 +56,7 @@ public class Hand extends CardPile implements Testable{
 	@Override
 	public boolean test() {
 		System.out.println("Testing class: Hand");
-		//TODO add actual testing here
+
 		Hand testHand = new Hand();
 		Card testCard = new Card( Suits.CLUB,Faces.TWO );
 		Card testCard2 = new Card(Suits.DIAMOND, Faces.KING);
@@ -72,6 +73,10 @@ public class Hand extends CardPile implements Testable{
 		testHand.removeCard(testCard);
 		System.out.println(testHand.toString());
 
+		testHand.addCard(testCard);
+		testHand.computeRanking();
+
+		System.out.println(Arrays.toString(testHand.toArray()));
 
 
 		return true;
