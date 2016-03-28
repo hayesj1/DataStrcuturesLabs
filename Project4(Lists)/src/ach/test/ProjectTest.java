@@ -4,6 +4,8 @@ import ach.card.Card;
 import ach.card.CardPile;
 import ach.card.Deck;
 import ach.card.Hand;
+import ach.game.Player;
+import ach.game.Stash;
 
 /**
  * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
@@ -23,10 +25,14 @@ public class ProjectTest {
 		Deck deck = new Deck();
 		Deck deck2 = new Deck(pile2);
 		Hand hand = new Hand();
+		Player player = new Player("TEST_DUMMY");
+		Stash stash = new Stash();
 
 		Testable.test(cards[0]);
 		Testable.test(pile);
 		Testable.test(deck);
 		Testable.test(hand);
+		Testable.test(player);
+		Testable.test(stash);
 	}
 }

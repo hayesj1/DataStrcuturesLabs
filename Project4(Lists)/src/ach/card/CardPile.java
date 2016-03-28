@@ -31,7 +31,7 @@ public class CardPile implements Testable {
 				this.cards.add(card);
 			}
 		} else {
-			System.err.println("Null card[] provided to Deck constructor!");
+			System.err.println("Null card[] provided to CardPile constructor!");
 		}
 	}
 

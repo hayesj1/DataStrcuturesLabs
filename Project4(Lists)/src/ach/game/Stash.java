@@ -1,5 +1,7 @@
 package ach.game;
 
+import ach.test.Testable;
+
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
@@ -13,7 +15,7 @@ import java.util.Set;
  *         <p>
  *         Created by hayesj3 on 3/23/2016.
  */
-public class Stash {
+public class Stash implements Testable {
 	EnumMap<Chips, Integer> stash;
 
 	public Stash() {
@@ -112,4 +114,12 @@ public class Stash {
 		return blder.toString();
 	}
 
+
+	@Override
+	public boolean test() {
+		System.out.println("Testing class: Stash");
+		//TODO add actual testing here
+
+		return true;
+	}
 }
