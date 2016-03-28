@@ -148,6 +148,11 @@ public class CardPile implements Testable {
 		System.out.println(testPile.getTopCard().toString());
 		System.out.println(testPile.getBottomCard().toString());
 
+		testPile.shuffle(25);
+		System.out.println(testPile.getTopCard().toString());
+		System.out.println(testPile.getBottomCard().toString());
+
+
 		return true;
 	}
 }
