@@ -96,6 +96,10 @@ public class Stash {
 		return total;
 	}
 
+	public void reset() {
+		stash.forEach((chips, integer) -> integer = 0 );
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder blder = new StringBuilder();
@@ -103,8 +107,9 @@ public class Stash {
 			blder.append(entry.getKey());
 			blder.append(": ");
 			blder.append(entry.getValue());
-			blder.append(" | ");
+			if(!entry.getKey().equals(Chips.Purple)) { blder.append(" | "); }
 		}
 		return blder.toString();
 	}
+
 }

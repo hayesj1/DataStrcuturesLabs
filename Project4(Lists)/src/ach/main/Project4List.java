@@ -10,7 +10,7 @@ public class Project4List {
 	public static void main(String[] args) {
 		boolean initialValsFromCLI = false;
 
-		if(args.length != 1 || args.length != 3) {
+		if(args.length != 1 && args.length != 3) {
 			System.err.println("Usage: java main.Project4List <numPlayers> [ <startingPot> <startingStash> ]");
 			return;
 		} else if (args.length == 3) {

@@ -22,7 +22,7 @@ public class Card implements Comparable<Card>, Testable{
 		this.face = Faces.valueOf(face);
 
 		if (this.face == null) {
-			throw new IllegalArgumentException("Invalid face, " + face + "/" + this.face + ", for Suit: " + this.getSuit());
+			throw new IllegalArgumentException("Invalid face, " + face);
 		}
 	}
 

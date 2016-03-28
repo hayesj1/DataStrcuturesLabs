@@ -27,7 +27,7 @@ public enum Ranking {
 	public Card getHigh() { return this.high; }
 	public void setHigh(Card card) { this.high = card; }
 
-	Ranking computeRanking(Hand hand) {
+	static Ranking computeRanking(Hand hand) {
 		Card[] cards = hand.toArray();
 		Card high = getHigh(cards);
 		Ranking rank;
@@ -57,7 +57,7 @@ public enum Ranking {
 		return rank;
 	}
 
-	private boolean isRF(Card[] cards) {
+	private static boolean isRF(Card[] cards) {
 		boolean royalStraight = true, flush = (isF(cards));
 		Card[] scards = cards.clone();
 		Arrays.sort(scards, (o1, o2) -> (o1.compareTo(o2)));
@@ -73,10 +73,10 @@ public enum Ranking {
 		}
 		return royalStraight && flush;
 	}
-	private boolean isSF(Card[] cards) {
+	private static boolean isSF(Card[] cards) {
 		return (isS(cards) && isF(cards));
 	}
-	private boolean isFK(Card[] cards) {
+	private static boolean isFK(Card[] cards) {
 		boolean ret = false;
 		Card matcher, card2, card3, card4;
 		for (Card card1 : cards) {
@@ -106,7 +106,7 @@ public enum Ranking {
 		}
 		return ret;
 	}
-	private boolean isFH(Card[] cards) {
+	private static boolean isFH(Card[] cards) {
 		boolean foundPair = false, foundThreeKind = false;
 		Card matcher, matcher2, card2, card3;
 		Card[] cards2 = cards.clone();
@@ -149,7 +149,7 @@ public enum Ranking {
 
 		return foundPair && foundThreeKind;
 	}
-	private boolean isF(Card[] cards) {
+	private static boolean isF(Card[] cards) {
 		boolean sameSuit = true, firstCardValid = true, lastCardValid = true;
 		Card[] scards = cards.clone();
 		Arrays.sort(scards, (o1, o2) -> (o1.compareTo(o2)));
@@ -170,7 +170,7 @@ public enum Ranking {
 
 		return sameSuit && (firstCardValid || lastCardValid);
 	}
-	private boolean isS(Card[] cards) {
+	private static boolean isS(Card[] cards) {
 		boolean consecutive = true, firstCardValid = true, lastCardValid = true;
 		Card[] scards = cards.clone();
 		Arrays.sort(scards, (o1, o2) -> (o1.compareTo(o2)));
@@ -192,7 +192,7 @@ public enum Ranking {
 		return (consecutive && (firstCardValid || lastCardValid));
 	}
 
-	private boolean isTK(Card[] cards) {
+	private static boolean isTK(Card[] cards) {
 		boolean ret = false;
 		Card matcher, card2, card3;
 		for (Card card1 : cards) {
@@ -214,7 +214,7 @@ public enum Ranking {
 		}
 		return ret;
 	}
-	private boolean isTP(Card[] cards) {
+	private static boolean isTP(Card[] cards) {
 		boolean ret = false;
 		boolean firstpairFound = false;
 		Card matcher1 = null,  matcher2, card1, card2;
@@ -243,7 +243,7 @@ public enum Ranking {
 		}
 		return ret;
 	}
-	private boolean isP(Card[] cards) {
+	private static boolean isP(Card[] cards) {
 		boolean ret = false;
 		Card card1, card2;
 
@@ -256,7 +256,7 @@ public enum Ranking {
 		}
 		return ret;
 	}
-	private Card getHigh(Card[] cards) {
+	private static Card getHigh(Card[] cards) {
 		Card high = cards[0];
 		for (int i = 1; i < cards.length; i++) {
 			if(cards[i].compareTo(high) > 0) {
@@ -272,7 +272,7 @@ public enum Ranking {
 	 * @param cards the array of cards to search in
 	 * @return the matching card if found; null otherwise
 	 */
-	private Card findMatch(Card matcher, Card[] cards) {
+	private static Card findMatch(Card matcher, Card[] cards) {
 		boolean matchFound = false;
 		Card card, ret = null;
 		for (int i = 0; !matchFound && i < cards.length; i++) {

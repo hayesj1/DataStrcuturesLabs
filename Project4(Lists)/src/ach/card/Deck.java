@@ -20,7 +20,8 @@ public class Deck extends CardPile implements Testable {
 	public Deck() {
 		for (Suits suit : Suits.values()) {
 			for (Faces face : Faces.values()) {
-				cards.add(new Card(suit, face));
+				Card temp = new Card(suit, face);
+				cards.add(temp);
 			}
 		}
 	}

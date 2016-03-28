@@ -1,7 +1,8 @@
 package ach.card;
 
-import ach.game.Stash;
 import ach.test.Testable;
+
+import java.util.Iterator;
 
 /**
  * Group Members: Christian Abate-Wong, Karen Camaso, Jacob Hayes
@@ -14,11 +15,7 @@ import ach.test.Testable;
  */
 public class Hand extends CardPile implements Testable{
 
-	Stash stash;
-
-	public Hand() {
-		this.stash = new Stash();
-	}
+	public Hand() {}
 
 	public void receiveCard(Card card) {
 		addCard(card);
@@ -33,12 +30,20 @@ public class Hand extends CardPile implements Testable{
 		}
 	}
 
-	protected void computeRanking() {
-
+	public Ranking computeRanking() {
+		return Ranking.computeRanking(this);
 	}
 
 	public Card[] toArray() {
-		return cards.toArray();
+		Card[] ret = new Card[cards.getLength()];
+		Iterator<Card> iterator = cards.iterator();
+		System.out.println(cards.getEntry(0));
+		for (int i = 0; i < ret.length; i++) {
+			Card c = iterator.next();
+			ret[i] = c;
+			System.out.println(ret[i] + ", " + c);
+		}
+		return ret;
 	}
 
 	@Override

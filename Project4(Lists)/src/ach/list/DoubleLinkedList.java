@@ -26,31 +26,45 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 		first = null;
 		last = null;
 		size = 0;
-		initialized = true;
+		initialized = false;
 	}
-	private void init(E data) {
-		first = new Node(data, null, null);
-		last = first;
-		size = 1;
+	private void init() {
+		first = new Node(null, null, null);
+		last = new Node(null, first, null);
+		first.setNext(last);
 		initialized = true;
 	}
 
 	@Override
 	public void add(E newEntry) {
 		if(!initialized || isEmpty()) {
-			init(newEntry);
-		} else {
-			Node temp = new Node(newEntry, last, null);
-			last.setNext(temp);
-			last = temp;
+			init();
+			first.setData(newEntry);
 			size++;
+		} else {
+			if(size > 1) {
+				Node temp = new Node(newEntry, last, null);
+				last.setNext(temp);
+				last = temp;
+				size++;
+			} else {
+				last.setData(newEntry);
+				size++;
+			}
 		}
 	}
 
 	@Override
 	public void add(int position, E newEntry) {
-		if(!initialized || isEmpty()) {
-			init(newEntry);
+		if(position < 0 || position > size-1) {
+			throw new IndexOutOfBoundsException("Index " + position + ", is > for max index " + (size-1) + ", or is < 0");
+		}
+		if (!initialized || isEmpty()) {
+			init();
+			first.setData(newEntry);
+			size++;
+		} else if (position == size - 1) {
+			last.setData(newEntry);
 		} else {
 			ListIterator iterator = new ListIterator();
 			for (int i = 0; i < position; i++, iterator.next()) ;
@@ -65,13 +79,13 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 		if(!initialized || isEmpty()) {
 			return null;
 		} else if (position == 0) {
-			first.getNext().setPrev(null);
 			data = first.getData();
 			first = first.getNext();
+			first.setPrev(null);
 		} else if (position == size-1) {
-			last.getPrev().setNext(null);
 			data = last.getData();
 			last = last.getPrev();
+			last.setNext(null);
 		} else {
 			ListIterator iterator = new ListIterator();
 			for (int i = 0; i < position - 1; i++, iterator.next()) ;
@@ -105,8 +119,7 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 		} else {
 			ListIterator iterator = new ListIterator();
 			for (int i = 0; i < position - 1; i++, iterator.next()) ;
-			E data = iterator.next();
-			return data;
+			return iterator.next();
 		}
 	}
 
@@ -140,9 +153,12 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 	@Override
 	public E[] toArray() {
 		E[] arr = (E[]) new Object[getLength()];
-		ListIterator iterator = new ListIterator();
+		ListIterator iterator = (ListIterator) this.iterator();
 
-		for (int i = 0; i < getLength(); i++) { arr[i] = iterator.next(); }
+		for (int i = 0; i < getLength(); i++) {
+			arr[i] = iterator.next();
+			System.out.println(iterator.currIdx);
+		}
 
 		return arr;
 	}
@@ -154,7 +170,8 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 
 	@Override
 	public Iterator<E> iterator() {
-		return new ListIterator();
+		DoubleLinkedList<E>.ListIterator ret = new DoubleLinkedList<E>.ListIterator();
+		return ret;
 	}
 
 	class Node {
@@ -193,10 +210,19 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 
 		@Override
 		public E next() throws NoSuchElementException {
-			E data = currNode.getNext().getData();
-			currNode = currNode.getNext();
-			currIdx++;
-			hasNextBeenCalled = true;
+			E data = null;
+
+			if(currNode.getNext() == null) {
+				if (currIdx > getLength()) {
+					throw new NoSuchElementException();
+				} else {
+					data = currNode.getNext().getData();
+					currNode = currNode.getNext();
+					currIdx++;
+					hasNextBeenCalled = true;
+
+				}
+			}
 			return data;
 		}
 
@@ -230,7 +256,7 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 
 		@Override
 		public void remove() throws IllegalStateException {
-			//E data = null;                     //uncomment to return removed node's data
+			//T data = null;                     //uncomment to return removed node's data
 			if (hasNextBeenCalled || hasPrevBeenCalled) {
 				currNode.getNext().setPrev(currNode.getPrev());
 				currNode.getPrev().setNext(currNode.getNext());

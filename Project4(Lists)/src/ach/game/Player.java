@@ -2,6 +2,7 @@ package ach.game;
 
 import ach.card.Card;
 import ach.card.Hand;
+import ach.card.Ranking;
 import ach.test.Testable;
 
 /**
@@ -21,12 +22,17 @@ public class Player implements Testable{
 	private String name;
 	private Hand hand;
 	private Stash stash;
+	private Ranking currRank;
 
 	public Player(String name) {
 		this.playerID = ++numPlayers;
 		this.name = name;
 		this.hand = new Hand();
 		this.stash = new Stash();
+	}
+
+	public void computeRank() {
+		this.currRank = this.hand.computeRanking();
 	}
 
 	public void addCardToHand(Card c) {
@@ -48,6 +54,10 @@ public class Player implements Testable{
 	public void addWinnings(int winnings) {
 		this.stash.addValue(winnings);
 	}
+	public int getStashValue() { return stash.getTotalValue(); }
+
+	public Ranking getCurrRank() { return currRank; }
+	public Hand getHand() { return hand; }
 
 	@Override
 	public String toString() {

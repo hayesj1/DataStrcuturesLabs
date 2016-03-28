@@ -6,6 +6,7 @@ import ach.card.Hand;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DisplayHandChoices extends JDialog {
 	private JPanel contentPane;
@@ -19,40 +20,54 @@ public class DisplayHandChoices extends JDialog {
 	private JRadioButton card6;
 
 	private JRadioButton[] cardButtons;
-	private ArrayList<Integer> cardSelection;
+	private ArrayList<Card> cardSelection;
 	private Hand hand;
 	private int selected = 0;
 	private int numPicks;
 
 	public DisplayHandChoices(Hand hand, int numPicks) {
+		this.hand = hand;
+		this.numPicks = numPicks;
+		this.cardButtons = new JRadioButton[6];
+		this.cardSelection = new ArrayList<>();
+
 		setContentPane(contentPane);
 		setModal(true);
 		setTitle("Select " + numPicks + " Cards to Pass");
 		getRootPane().setDefaultButton(buttonOK);
-		this.cardButtons = new JRadioButton[6];
-		this.cardSelection = new ArrayList<>();
-		this.hand = hand;
-		this.numPicks = numPicks;
 
 		this.buttonOK.setEnabled(false);
 		buttonOK.addActionListener(e -> onOK());
 	}
 
 	private void onOK() {
+		Card[] hand = this.hand.toArray();
 		for (int i = 0; i < 6; i++) {
-			if (cardButtons[i].isSelected()) { cardSelection.add(i); }
+			if (cardButtons[i].isSelected()) { cardSelection.add(hand[i]); }
 		}
 
 		dispose();
 	}
 
+	private void deSelect() {
+		for (int i = 0; i < 6; i++) {
+			if (cardButtons[i].isSelected()) { cardButtons[i].setSelected(false); }
+		}
+	}
+
 	public Card[] getSelection() {
-		return cardSelection.toArray(new Card[numPicks]);
+		deSelect();
+		if (cardSelection.size() != numPicks) {
+			return null;
+		} else {
+			return cardSelection.toArray(new Card[numPicks]);
+		}
 	}
 	public void setNumPicks(int numPicks) { this.numPicks = numPicks; }
 
 	private void createUIComponents() {
 		Card[] hand = this.hand.toArray();
+		System.out.println(Arrays.toString(hand));
 
 		card1 = new JRadioButton(hand[0].toString());
 		card2 = new JRadioButton(hand[1].toString());
