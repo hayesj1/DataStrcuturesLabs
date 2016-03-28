@@ -124,7 +124,29 @@ public class CardPile implements Testable {
 	@Override
 	public boolean test() {
 		System.out.println("Testing class: CardPile");
-		//TODO add actual testing here
+		Card testCard1 = new Card(Suits.CLUB, Faces.KING);
+		Card testCard2 = new Card(Suits.DIAMOND, Faces.ACE);
+		Card testCard3 = new Card(Suits.HEART, Faces.TEN);
+		Card testCard4 = new Card(Suits.SPADE, Faces.NINE);
+		Card testCard5 = new Card(Suits.CLUB, Faces.EIGHT);
+
+		Card[] cArray = {testCard1,testCard2,testCard3,testCard4,testCard5};
+		CardPile testPile = new CardPile(cArray);
+
+		System.out.println(testPile.removeCard().toString());
+		testPile.addCard(testCard3);
+		System.out.println(testPile.getTopCard().toString());
+		System.out.println(testPile.getBottomCard().toString());
+
+		System.out.println(testPile.search(testCard3));
+
+		testPile.shuffle();
+		System.out.println(testPile.getTopCard().toString());
+		System.out.println(testPile.getBottomCard().toString());
+
+		testPile.shuffle();
+		System.out.println(testPile.getTopCard().toString());
+		System.out.println(testPile.getBottomCard().toString());
 
 		return true;
 	}
