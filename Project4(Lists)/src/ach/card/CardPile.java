@@ -40,6 +40,8 @@ public class CardPile implements Testable {
 	/** Adds a card to the bottom of the pile **/
 	protected void addCard(Card card) { cards.add(card);}
 
+	public Card getCard(int pos) { return this.cards.getEntry(pos); }
+
 	/**
 	 * Finds the position of the given card in the pile
 	 * @param c the card to search for

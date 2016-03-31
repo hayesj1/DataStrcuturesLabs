@@ -39,9 +39,13 @@ public class Card implements Comparable<Card>, Testable{
 		return (this.sameSuit(c) && this.equals(c));
 	}
 
+	public String toFileName() {
+		return (Faces.toNumeralString(this.getFace()) + "_of_" + this.getSuit().toString().toLowerCase() + "s");
+	}
+
 	@Override
 	public String toString() {
-		return (this.getFace() + " of " + this.getSuit() + "s");
+		return (Faces.toNumeralString(this.getFace()) + " of " + this.getSuit().toString().toLowerCase() + "s");
 	}
 
 	@Override

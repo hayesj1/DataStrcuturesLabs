@@ -118,7 +118,7 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 			return null;
 		} else {
 			ListIterator iterator = new ListIterator();
-			for (int i = 0; i < position - 1; i++, iterator.next()) ;
+			for (int i = 0; i < position; i++, iterator.next()) ;
 			return iterator.next();
 		}
 	}
@@ -201,7 +201,7 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 		private boolean hasPrevBeenCalled;
 
 		public ListIterator() {
-			this.currNode = first;
+			this.currNode = null;
 			this.currIdx = -1;
 			this.hasNextBeenCalled = false;
 			hasPrevBeenCalled = false;
@@ -211,37 +211,43 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 		@Override
 		public E next() throws NoSuchElementException {
 			E data = null;
-
-			if(currNode.getNext() == null) {
-				if (currIdx > getLength()) {
-					throw new NoSuchElementException();
-				} else {
-					data = currNode.getNext().getData();
-					currNode = currNode.getNext();
-					currIdx++;
-					hasNextBeenCalled = true;
-
-				}
+			if(currIdx < 0) {
+				this.currNode = first;
+				data = this.currNode.getData();
+				currIdx++;
+				hasNextBeenCalled = true;
+			} else if(!hasNext()) {
+				throw new NoSuchElementException();
+			} else {
+				data = currNode.getNext().getData();
+				currNode = currNode.getNext();
+				currIdx++;
+				hasNextBeenCalled = true;
 			}
 			return data;
 		}
 
 		@Override
 		public E previous() throws NoSuchElementException {
-			E data = currNode.getPrev().getData();
-			currNode = currNode.getPrev();
-			currIdx--;
-			hasPrevBeenCalled = true;
+			E data = null;
+			if(hasPrevious()) {
+				data = currNode.getPrev().getData();
+				currNode = currNode.getPrev();
+				currIdx--;
+				hasPrevBeenCalled = true;
+			} else {
+				throw new NoSuchElementException();
+			}
 			return data;
 		}
 
 		@Override
 		public boolean hasNext() {
-			return currNode.getNext() != null;
+			return currNode.getNext() != null && currIdx < getLength();
 		}
 		@Override
 		public boolean hasPrevious() {
-			return currNode.getPrev() != null;
+			return currNode.getPrev() != null && currIdx > 0;
 		}
 
 		@Override

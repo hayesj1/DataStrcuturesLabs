@@ -10,10 +10,8 @@ package ach.card;
  *         Created by hayesj3 on 3/18/2016.
  */
 public enum Suits {
+	CLUB,
 	DIAMOND,
 	HEART,
-	SPADE,
-	CLUB
-
-
+	SPADE
 }

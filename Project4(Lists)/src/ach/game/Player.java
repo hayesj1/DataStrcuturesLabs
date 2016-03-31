@@ -3,6 +3,7 @@ package ach.game;
 import ach.card.Card;
 import ach.card.Hand;
 import ach.card.Ranking;
+import ach.gui.PlayerGUI;
 import ach.test.Testable;
 
 /**
@@ -23,7 +24,7 @@ public class Player implements Testable{
 	private Hand hand;
 	private Stash stash;
 	private Ranking currRank;
-
+	private PlayerGUI gui;
 	public Player(String name) {
 		this.playerID = ++numPlayers;
 		this.name = name;
@@ -56,8 +57,12 @@ public class Player implements Testable{
 	}
 	public int getStashValue() { return stash.getTotalValue(); }
 
+	public int getPlayerID() { return playerID; }
 	public Ranking getCurrRank() { return currRank; }
 	public Hand getHand() { return hand; }
+	public PlayerGUI getGui() { return gui; }
+
+	public void setGui(PlayerGUI gui) { this.gui = gui; }
 
 	@Override
 	public String toString() {

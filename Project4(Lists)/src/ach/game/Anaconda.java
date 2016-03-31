@@ -3,7 +3,7 @@ package ach.game;
 import ach.card.Card;
 import ach.card.Deck;
 import ach.card.Ranking;
-import ach.gui.DisplayHandChoices;
+import ach.gui.PlayerGUI;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -58,14 +58,21 @@ public class Anaconda {
 		System.out.println("Adding initial chips to pot...");
 		pot.addValue(initialPotSize);
 
-		System.out.println("Giving players initial chips...");
-		if(initialStashSize == -1) { //true if initial stack isn't given on the commandline
-			for (Player player : players) { player.addChips(0,4,19,5,10,25); } //Default is $1,000 in chips
-		} else {
-			for (Player player : players) { player.addWinnings(initialStashSize); }
-		}
+		System.out.println("Initializing Players!");
+		for (Player player : players) {
+			System.out.println("Giving player " + player + " initial chips...");
+			if(initialStashSize == -1) { //true if initial stack isn't given on the commandline
+				player.addChips(0,4,19,5,10,25); //Default is $1,000 in chips
+			} else {
+				player.addWinnings(initialStashSize);
+			}
 
-		System.out.println("Initialization Complete!");
+			System.out.println("Assigning a GUI to player " + player + "...");
+			player.setGui(new PlayerGUI(player));
+		}
+		System.out.println("Player Initialization Complete!");
+
+		System.out.println("Game Initialization Complete!");
 	}
 
 	public void start(int handNo) {
@@ -75,11 +82,12 @@ public class Anaconda {
 		deck.shuffle(Deck.NUM_PASSES_ON_DEAL);
 		System.out.println("Dealing Cards");
 		deck.deal(players);
-		bet();
 
 		for (int i = 3; i > 0; i--) {
-			passCards(i);
+			nextGUIPhase(); // betting phase
 			bet();
+			nextGUIPhase(); // passing phase
+			passCards(i);   // sets each player's gui to wait while remaining players pass
 		}
 
 		Player winner = getHandWinner();
@@ -116,20 +124,46 @@ public class Anaconda {
 	}
 
 	private void bet() {
+		boolean checked = true;
+		boolean raised = false;
+		int currBet = 0;
 
+		do {
+			for (Player player : players) {
+				PlayerGUI gui = player.getGui();
+				if (!checked) {
+					gui.setCheckButtonEnabled(false);
+				}
+				gui.setVisible(true);
+				int action;
+				do {
+					action = gui.getAction();
+				} while (action == PlayerGUI.NO_ACTION);
+
+				if(action == PlayerGUI.CHECKED) {
+					checked = true;
+					raised = false;
+				} else if (action == PlayerGUI.RAISED) {
+					checked = false;
+					raised = true;
+					currBet = gui.getBetValue();
+				}
+			}
+		} while (!checked && raised);
 	}
 
 	private void passCards(int numCardsToPass) {
 		Card[][] cardsToPass = new Card[players.length][numCardsToPass];
 		for(int i = 0; i < players.length; i++) {
-			DisplayHandChoices dialog = new DisplayHandChoices(players[i].getHand(), numCardsToPass);
-			dialog.setVisible(true);
+			PlayerGUI gui = players[i].getGui();
+			gui.setVisible(true);
 			do {
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {}
-				cardsToPass[i] = dialog.getSelection();
+				cardsToPass[i] = gui.getSelected();
 			} while(cardsToPass[i] == null); // Keep looping until the player has selected the correct number of cards
+			gui.nextPhase(); //set the Gui to wait
 		}
 		// Pass the cards stopping right before the last player passes
 		for (int i = 0; i < players.length - 1; i++) {
@@ -142,6 +176,12 @@ public class Anaconda {
 		for (int i = 0; i < numCardsToPass; i++) {
 			Card pass = players[players.length-1].passCard(cardsToPass[players.length-1][i]);
 			players[0].addCardToHand(pass);
+		}
+	}
+
+	private void nextGUIPhase() {
+		for (Player player : players) {
+			player.getGui().nextPhase();
 		}
 	}
 
