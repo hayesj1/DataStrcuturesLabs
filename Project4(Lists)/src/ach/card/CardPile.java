@@ -42,6 +42,7 @@ public class CardPile implements Testable {
 
 	public Card getCard(int pos) { return this.cards.getEntry(pos); }
 
+	public Card swapCard(Card newCard, int pos) { return this.cards.replace(pos, newCard); }
 	/**
 	 * Finds the position of the given card in the pile
 	 * @param c the card to search for

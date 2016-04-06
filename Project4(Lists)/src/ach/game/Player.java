@@ -23,13 +23,17 @@ public class Player implements Testable{
 	private String name;
 	private Hand hand;
 	private Stash stash;
+	private int betAmount;
 	private Ranking currRank;
 	private PlayerGUI gui;
+
+
 	public Player(String name) {
 		this.playerID = ++numPlayers;
 		this.name = name;
 		this.hand = new Hand();
 		this.stash = new Stash();
+		betAmount = 0;
 	}
 
 	public void computeRank() {
@@ -52,22 +56,38 @@ public class Player implements Testable{
 		this.stash.addChips(Chips.White, white);
 	}
 
-	public void addWinnings(int winnings) {
-		this.stash.addValue(winnings);
-	}
+	public void removeValueFromStash(int value) { this.stash.removeValue(value); }
+	public void addValueToStash(int value) { this.stash.addValue(value); }
 	public int getStashValue() { return stash.getTotalValue(); }
 
+	/**
+	 * Adds val to this player's bet, while removing val from this player's stash
+	 * <p>NOTE: if <code>val > this.stash.getTotalValue()</code> then the player's bet's value is increased by <code>val - this.stash.getTotalValue()</code></p>
+	 *
+	 * @param val the amount this player should add to his/her bet
+	 */
+	public void addToBet(int val) {
+		int extraVal = stash.removeValue(val); // leftover chip value if val is greater than the player's stash value
+		betAmount += (extraVal == 0) ? val : val - extraVal;
+	}
+
+	public int getBet() { return betAmount; }
 	public int getPlayerID() { return playerID; }
-	public Ranking getCurrRank() { return currRank; }
+	public Ranking getCurrRank() { computeRank(); return currRank; }
 	public Hand getHand() { return hand; }
 	public PlayerGUI getGui() { return gui; }
 
+	public void setBetAmount(int newBet) {
+		int oldBet = betAmount;
+		this.stash.addValue(oldBet);
+		this.stash.removeValue(newBet);
+		this.betAmount = newBet;
+	}
 	public void setGui(PlayerGUI gui) { this.gui = gui; }
 
 	@Override
 	public String toString() {
-		return ("Player " + name + "'s stash has a value of " +
-				stash.getTotalValue() + ", and chips:\n" + stash.toString());
+		return name;
 	}
 
 

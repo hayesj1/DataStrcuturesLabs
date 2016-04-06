@@ -64,7 +64,7 @@ public class Anaconda {
 			if(initialStashSize == -1) { //true if initial stack isn't given on the commandline
 				player.addChips(0,4,19,5,10,25); //Default is $1,000 in chips
 			} else {
-				player.addWinnings(initialStashSize);
+				player.addValueToStash(initialStashSize);
 			}
 
 			System.out.println("Assigning a GUI to player " + player + "...");
@@ -83,11 +83,20 @@ public class Anaconda {
 		System.out.println("Dealing Cards");
 		deck.deal(players);
 
+		for (Player p : players) {
+			p.getGui().resetHandDisplay(); //prepare for gui display
+			p.getGui().pack();
+		}
+		System.out.println("Beginning hand #" + handNo + "!");
 		for (int i = 3; i > 0; i--) {
 			nextGUIPhase(); // betting phase
 			bet();
 			nextGUIPhase(); // passing phase
 			passCards(i);   // sets each player's gui to wait while remaining players pass
+			for (Player player : players) {
+				player.getGui().resetHandDisplay();
+				player.getGui().setPotValue(this.pot.getTotalValue());
+			}
 		}
 
 		Player winner = getHandWinner();
@@ -95,7 +104,8 @@ public class Anaconda {
 		int leftOvers = 0;
 
 		if(winner != null) { // No tie
-			winner.addWinnings(pot.getTotalValue());
+			winner.addValueToStash(pot.getTotalValue());
+			System.out.println("Hand Complete! The Winner is: " + winner);
 		} else { // There was a tie
 			winners = new ArrayList<>();
 			Ranking win = players[0].getCurrRank();
@@ -115,41 +125,82 @@ public class Anaconda {
 			int potSize = pot.getTotalValue();
 			int winnings = potSize / numWinners;
 			leftOvers = potSize % numWinners;
+			winners.forEach(player -> player.addValueToStash(winnings));
+			System.out.println("Hand Complete! The Winners of the Tie are: " + winners);
 		}
 
 		pot.reset();
 		removeLosers(detectLosers());
 
-		System.out.println("Hand Complete! The Winner is: " + (winners == null ? winner : winners));
+		pot.addValue(leftOvers);
 	}
 
 	private void bet() {
-		boolean checked = true;
-		boolean raised = false;
+		boolean checkable = true, firstBet = true;
+		boolean checked = false, raised = false, called = false;
 		int currBet = 0;
 
+		System.out.println("Let the betting begin!");
 		do {
 			for (Player player : players) {
 				PlayerGUI gui = player.getGui();
-				if (!checked) {
+				gui.setPotValue(this.pot.getTotalValue());
+
+				if(firstBet) {
 					gui.setCheckButtonEnabled(false);
+					gui.setCallButtonEnabled(false);
+					firstBet = false;
+				} else {
+					gui.setCallButtonEnabled(true);
+
+					if (checkable) { gui.setCheckButtonEnabled(true); }
+					else { gui.setCheckButtonEnabled(false); }
 				}
+
 				gui.setVisible(true);
+
 				int action;
 				do {
 					action = gui.getAction();
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {}
 				} while (action == PlayerGUI.NO_ACTION);
 
-				if(action == PlayerGUI.CHECKED) {
-					checked = true;
-					raised = false;
-				} else if (action == PlayerGUI.RAISED) {
+				if(action == PlayerGUI.RAISED) {
 					checked = false;
+					called = false;
 					raised = true;
+					checkable = false;
+
 					currBet = gui.getBetValue();
+
+				} else if (action == PlayerGUI.CALLED) {
+					checked = false;
+					called = true;
+					raised = false;
+					checkable = false;
+					int diff = currBet - player.getBet();
+					if (diff == 0) {
+						pot.addValue(currBet);
+						gui.addToPot(currBet);
+					} else {
+						player.addToBet(diff);
+						pot.addValue(diff);
+						gui.addToPot(diff);
+					}
+
+				} else if (action == PlayerGUI.CHECKED) {
+					checked = true;
+					called = false;
+					raised = false;
+					checkable = true;
 				}
+
+				gui.setVisible(false);
 			}
-		} while (!checked && raised);
+		} while ((!checked && !called) || raised);
+		System.out.println("Betting complete!");
 	}
 
 	private void passCards(int numCardsToPass) {
@@ -157,25 +208,32 @@ public class Anaconda {
 		for(int i = 0; i < players.length; i++) {
 			PlayerGUI gui = players[i].getGui();
 			gui.setVisible(true);
-			do {
+			System.out.println("Player " + players[i] + ", please select " + numCardsToPass + " cards to pass!");
+			while(gui.getAction() != PlayerGUI.PASSED) { // Keep looping until the player has pressed the pass button
 				try {
-					Thread.sleep(500);
+					Thread.sleep(500); //free up cpu while waiting
 				} catch (InterruptedException e) {}
-				cardsToPass[i] = gui.getSelected();
-			} while(cardsToPass[i] == null); // Keep looping until the player has selected the correct number of cards
-			gui.nextPhase(); //set the Gui to wait
-		}
-		// Pass the cards stopping right before the last player passes
-		for (int i = 0; i < players.length - 1; i++) {
-			for (int j = 0; j < numCardsToPass; j++) {
-				Card pass = players[i].passCard(cardsToPass[i][j]);
-				players[i+1].addCardToHand(pass);
 			}
+			cardsToPass[i] = gui.getSelected();
+			gui.setVisible(false);
+			gui.deselect(); //deselects the selected cards
 		}
-		// Pass last player's cards to the first player
-		for (int i = 0; i < numCardsToPass; i++) {
-			Card pass = players[players.length-1].passCard(cardsToPass[players.length-1][i]);
-			players[0].addCardToHand(pass);
+		nextGUIPhase(); // make all guis wait
+
+		System.out.println("Passing cards!");
+		// Pass the cards stopping right before the last player passes
+		for (int j = 0; j < numCardsToPass; j++) { // pass each card
+			Card pass1 = cardsToPass[0][j]; // player 1's card to pass
+			Card pass2 = cardsToPass[1][j]; // player 2's card to pass
+			Card pass3 = cardsToPass[2][j]; // player 3's card to pass
+			int cardPos1 = players[0].getHand().search(pass1); // player 1's passed card's position in their hand
+			int cardPos2 = players[1].getHand().search(pass2); // player 2's passed card's position in their hand
+			int cardPos3 = players[2].getHand().search(pass3); // player 3's passed card's position in their hand
+
+			// swap the card at player 1's pass position with player 3's passed card,
+			// then swap the returned card with the card at player 2's pass position,
+			// and then returned card with the card at player 3's pass position
+			players[2].getHand().swapCard(players[1].getHand().swapCard(players[0].getHand().swapCard(pass3, cardPos1), cardPos2), cardPos3);
 		}
 	}
 

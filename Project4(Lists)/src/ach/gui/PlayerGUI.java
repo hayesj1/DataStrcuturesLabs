@@ -17,61 +17,65 @@ public class PlayerGUI extends JFrame {
 	public static final int NO_ACTION = 0;
 	public static final int CHECKED = 1;
 	public static final int RAISED = 2;
+	public static final int CALLED = 3;
+	public static final int PASSED = 4;
+
 
 	private JPanel contentPane;
+
+	private JPanel buttonPanel;
 	private JButton passButton;
 	private JButton betButton;
-	private JButton raiseButton;
 	private JButton checkButton;
+	private JButton callButton;
 
 	private JPanel handDisplayPanel;
-	private JRadioButton cardButton1;
-	private JRadioButton cardButton2;
-	private JRadioButton cardButton3;
-	private JRadioButton cardButton4;
-	private JRadioButton cardButton5;
-	private JRadioButton cardButton6;
+	private CardRadioButton cardButton1;
+	private CardRadioButton cardButton2;
+	private CardRadioButton cardButton3;
+	private CardRadioButton cardButton4;
+	private CardRadioButton cardButton5;
+	private CardRadioButton cardButton6;
 
-	private JLabel cardLabel1;
-	private JLabel cardLabel2;
-	private JLabel cardLabel3;
-	private JLabel cardLabel4;
-	private JLabel cardLabel5;
-	private JLabel cardLabel6;
-
+	private JPanel displayPanel;
 	private JLabel potLabel;
 	private JLabel betLabel;
+	private JLabel gameBetLabel;
 	private JTextField currPot;
 	private JTextField currBet;
+	private JTextField gameCurrBet;
+
 
 	private Player player;
-	private Phases phase = Phases.wait;
+	private Phases phase;
 	private int numPicks;
 	private int numSelected;
-	private ArrayList<Card> selectedCards;
-	private int lastAction = NO_ACTION;
-	private JLabel[] cardLabels;
-	private JRadioButton[] cardButtons;
+	private int lastAction;
+	private CardButtonAction[] actions = new CardButtonAction[6];
+	private ArrayList<Card> selectedCards = new ArrayList<>();
+	private CardRadioButton[] cardButtons = new CardRadioButton[6];
 
 	public enum Phases { wait, bet, pass, determineWinner }
 
 	public PlayerGUI(Player player) {
 		this.player = player;
-		this.cardLabels = new JLabel[6];
-		this.cardButtons = new JRadioButton[6];
-		this.selectedCards = new ArrayList<>();
+		this.phase = Phases.wait;
+		this.lastAction = NO_ACTION;
 
 		setTitle("Player " + player.getPlayerID() + "'s Hand");
 		setContentPane(contentPane);
+
 		this.init();
 		this.reset();
-		this.resetHandDisplay();
-
+		setCardButtonsEnabled(false);
+		setCheckButtonEnabled(false);
+		setPassButtonEnabled(false);
+		setBetButtonsEnabled(false);
+		setCallButtonEnabled(false);
+		this.phase = Phases.wait;
 	}
 
 	private void init() {
-		cardButton1.addActionListener(this::onCardPress);
-
 		cardButtons[0] = cardButton1;
 		cardButtons[1] = cardButton2;
 		cardButtons[2] = cardButton3;
@@ -79,75 +83,60 @@ public class PlayerGUI extends JFrame {
 		cardButtons[4] = cardButton5;
 		cardButtons[5] = cardButton6;
 
-		cardLabels[0] = cardLabel1;
-		cardLabels[1] = cardLabel2;
-		cardLabels[2] = cardLabel3;
-		cardLabels[3] = cardLabel4;
-		cardLabels[4] = cardLabel5;
-		cardLabels[5] = cardLabel6;
+		for (int i = 0; i < cardButtons.length; i++) {
+			actions[i] = new CardButtonAction(cardButtons[i]);
+			cardButtons[i].setAction(actions[i]);
+		}
+
+		passButton.addActionListener(this::onPassPress);
+		betButton.addActionListener(this::onBetPress);
+		checkButton.addActionListener(this::onCheckPress);
+		callButton.addActionListener(this::onCallPress);
 	}
 
 	public void reset() {
 		this.numPicks = 3;
 		this.numSelected = 0;
+		this.selectedCards.clear();
+		this.lastAction = NO_ACTION;
+		this.phase = Phases.wait;
 	}
 
-	private void resetHandDisplay() {
+	public void resetHandDisplay() {
 		Hand h = player.getHand();
-		int i = 0;
-		for (JRadioButton l : cardButtons) {
-			System.out.println(i);
-			System.out.println(h.getCard(i));
-			ImageIcon defaultIcon = new ImageIcon("gui_resources/default/" + h.getCard(i).toFileName() + ".png");
-			//ImageIcon rolloverIcon = new ImageIcon("gui_resources/rollover/" + h.getCard(i).toFileName() + ".png");
-			ImageIcon selectedIcon = new ImageIcon("gui_resources/selected/" + h.getCard(i).toFileName() + ".png");
-			//ImageIcon disabledIcon = new ImageIcon("gui_resources/disabled/" + h.getCard(i).toFileName() + ".png");
 
-			l.setIcon(defaultIcon);
-			//l.setRolloverIcon(rolloverIcon);
-			l.setSelectedIcon(selectedIcon);
-			//l.setDisabledIcon(disabledIcon);
+		for (int i = 0; i < cardButtons.length; i++) {
+			cardButtons[i].setCard(h.getCard(i));
+		}
+
+		int i = 0;
+		for (CardRadioButton b : cardButtons) {
+			b.setCard(h.getCard(i));
+			b.setToolTipText(b.getCard().toString());
+
 			i++;
 		}
 	}
 
-	private void onCardPress(ActionEvent e) {
+	private void onPassPress(ActionEvent e) {
 		if (this.phase != Phases.pass) { return; }
-		if (e.getSource() instanceof JRadioButton) {
-			JRadioButton button = (JRadioButton) e.getSource();
-			if(!button.isSelected()) {
-				button.setSelected(numSelected < numPicks);
-			} else {
-				int pos;
-				for (pos = 0; pos < cardButtons.length && !(cardButtons[pos].equals(button)); pos++);
-				selectedCards.remove(this.player.getHand().getCard(pos));
-			}
-
-			if(button.isSelected()) {
-				int pos;
-				for (pos = 0; pos < cardButtons.length && !(cardButtons[pos].equals(button)); pos++);
-				selectedCards.add(this.player.getHand().getCard(pos));
-				numSelected++;
-			} else {
-				passButton.setEnabled(true);
-			}
+		else if (selectedCards.size() != this.numPicks) {
+			JOptionPane.showMessageDialog(this, "You must select " + numPicks + " cards to pass!", "Wrong number of selected cards!", JOptionPane.ERROR_MESSAGE);
+		} else {
+			passButton.setEnabled(false);
+			lastAction = PASSED;
 		}
-	}
 
-	private void onPassPress() {
-		if (this.phase != Phases.pass) { return; }
-		passButton.setEnabled(false);
-		this.setVisible(false);
 	}
-	private void onCheckPress() {
+	private void onCheckPress(ActionEvent e) {
 		if (this.phase != Phases.bet) { return; }
 		setBetButtonsEnabled(false);
 		setCheckButtonEnabled(false);
 		lastAction = CHECKED;
 	}
-	private void onBetPress() {
+	private void onBetPress(ActionEvent e) {
 		if (this.phase != Phases.bet) { return; }
-		if(getBetValue() <= 0) {
+		if(!validateBetValue() || getBetValue() <= 0) {
 			currBet.setText("Invalid Bet amount!");
 			currBet.setSelectionStart(0);
 			currBet.setSelectionEnd(currBet.getText().length());
@@ -157,13 +146,23 @@ public class PlayerGUI extends JFrame {
 		}
 		lastAction = RAISED;
 	}
+	private void onCallPress(ActionEvent e) {
+		if (this.phase != Phases.bet) { return; }
+		lastAction = CALLED;
+	}
+
 	private void setBetButtonsEnabled(boolean enabled) {
 		betButton.setEnabled(enabled);
-		raiseButton.setEnabled(enabled);
 		currBet.setEnabled(enabled);
 	}
+	private void setCardButtonsEnabled(boolean enabled) {
+		for (CardRadioButton b : cardButtons) {
+			b.setEnabled(enabled);
+		}
+	}
 	public void setCheckButtonEnabled(boolean enabled) { checkButton.setEnabled(enabled); }
-	public int getAction() { return lastAction; }
+	public void setCallButtonEnabled(boolean enabled) { callButton.setEnabled(enabled); }
+	public void setPassButtonEnabled(boolean enabled) { passButton.setEnabled(enabled); }
 
 	public void nextPhase() {
 		if(numPicks == 0) {
@@ -171,45 +170,115 @@ public class PlayerGUI extends JFrame {
 			return;
 		}
 		switch(this.phase) {
-			case wait:
+			case wait: // advance to bet phase
 				phase = Phases.bet;
-				passButton.setEnabled(false);
+				setPassButtonEnabled(false);
 				setBetButtonsEnabled(true);
+				setCallButtonEnabled(true);
 				setCheckButtonEnabled(true);
 				break;
-			case bet:
+			case bet: // advance to pass phase
 				phase = Phases.pass;
 				setBetButtonsEnabled(false);
-				checkButton.setEnabled(false);
-				numPicks--;
-				passButton.setEnabled(true);
+				setCallButtonEnabled(false);
+				setCheckButtonEnabled(false);
+				setPassButtonEnabled(false); // prevents users from passing no cards
+				setCardButtonsEnabled(true);
 				break;
-			case pass:
+			case pass: // advance to wait phase
 				phase = Phases.wait;
-				passButton.setEnabled(false);
+				setPassButtonEnabled(false);
+				setCardButtonsEnabled(false);
 				setBetButtonsEnabled(false);
-				checkButton.setEnabled(false);
+				setCallButtonEnabled(false);
+				setCheckButtonEnabled(false);
+				numPicks--;
 				break;
 		}
+		lastAction = NO_ACTION;
 	}
 
-	private void deselect() {
+	public void deselect() {
 		for (int i = 0; i < cardButtons.length; i++) {
-			if (cardButtons[i].isSelected()) { cardButtons[i].setSelected(false); }
+			JRadioButton b = cardButtons[i];
+			Card c = this.player.getHand().getCard(i);
+			if (b.isSelected()) { b.setSelected(false); }
+			if(selectedCards.contains(c)) { selectedCards.remove(c); }
 		}
 	}
+	public void addToPot(int val) { setPotValue(getPotValue() + val);}
+	public void setPotValue(int val) { this.currPot.setText(String.valueOf(val)); }
+	public void setGameBetValue(int val) { this.gameCurrBet.setText(String.valueOf(val)); }
 
-	public void setPotValue(int val) {
-		this.currPot.setText("$" + val);
-	}
+	public int getPotValue() { return Integer.valueOf(this.currPot.getText()); }
 	public int getBetValue() { return Integer.valueOf(this.currBet.getText()); }
+	public int getGameBetValue() { return Integer.valueOf(this.gameCurrBet.getText()); }
+	public int getAction() { return lastAction; }
 	public Phases getPhase(Phases phase) { return phase; }
+
+	public boolean validateBetValue() {
+		boolean ret = true;
+		String value = this.currBet.getText();
+		for (Character c : value.toCharArray()) {
+			ret = Character.isDigit(c);
+			if (!ret) {
+				break;
+			}
+		}
+		return ret;
+	}
+
 	public Card[] getSelected() {
-		if (selectedCards.size() != numPicks) {
-			return null;
-		} else {
-			deselect();
-			return selectedCards.toArray(new Card[numPicks]);
+		if(lastAction != PASSED) { return null; }
+		return selectedCards.toArray(new Card[numPicks]);
+	}
+
+	private void createUIComponents() {
+		cardButton1 = new CardRadioButton(null);
+		cardButton2 = new CardRadioButton(null);
+		cardButton3 = new CardRadioButton(null);
+		cardButton4 = new CardRadioButton(null);
+		cardButton5 = new CardRadioButton(null);
+		cardButton6 = new CardRadioButton(null);
+	}
+
+	class CardButtonAction extends AbstractAction {
+		CardRadioButton button;
+		String tooltip;
+
+		public CardButtonAction(CardRadioButton button) {
+			this.button = button;
+
+			Card c = this.button.getCard();
+			this.tooltip = (c != null) ? c.toString() : "NULL";
+
+			this.putValue(SHORT_DESCRIPTION, this.tooltip);
+			this.putValue(SELECTED_KEY, false);
+		}
+
+		void updateToolTip(String newToolTip) {
+			this.tooltip = newToolTip;
+			this.putValue(SHORT_DESCRIPTION, tooltip);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() instanceof CardRadioButton) {
+				CardRadioButton button = (CardRadioButton) e.getSource();
+				if(button.isSelected()) {
+					selectedCards.add(button.getCard());
+					numSelected++;
+				} else {
+					selectedCards.remove(button.getCard());
+					numSelected--;
+				}
+
+				if(numSelected == numPicks) {
+					setPassButtonEnabled(true);
+				} else {
+					setPassButtonEnabled(false);
+				}
+			}
 		}
 	}
 
@@ -229,11 +298,12 @@ public class PlayerGUI extends JFrame {
 		}
 
 		PlayerGUI gui = new PlayerGUI(p);
+		gui.resetHandDisplay();
 		gui.pack();
 		gui.setVisible(true);
 		for (int i = 0; i < 3; i++) {
 			gui.nextPhase();
-			Thread.sleep(7500);
+			Thread.sleep(5000);
 		}
 		Thread.sleep(3000);
 		System.exit(0);

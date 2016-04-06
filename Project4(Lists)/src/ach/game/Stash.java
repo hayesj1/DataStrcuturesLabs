@@ -62,27 +62,31 @@ public class Stash implements Testable {
 		int divisor, quotient, remainder;
 
 		int i;
-		for (i = 0, quotient = 0; quotient != 0 || i < chips.length; i++, dividend = quotient) {
+		for (i = 0, quotient = 0; i < chips.length && (i == 0 || quotient != 0); i++, dividend = quotient) {
 			divisor = chips[i].getValue();
+			if(divisor >= dividend) { continue; }
 			quotient = dividend / divisor;
 			remainder = dividend % divisor;
-			addChips(chips[i], remainder);
+			addChips(chips[i], (remainder == 0) ? quotient : remainder);
 		}
 	}
-	public void removeValue(int value) {
+	public int removeValue(int value) {
 		Chips[] chips = Chips.reverseValues();
 		int numChips = 0;
 		int dividend = value;
 		int divisor, quotient, remainder, extra;
 
 		int i;
-		for (i = 0, quotient = 0, extra = 0; quotient != 0 || i < chips.length; i++, dividend = quotient + extra) {
+		for (i = 0, quotient = 0, extra = 0; i < chips.length && (i == 0 || quotient != 0); i++, dividend = quotient + extra) {
 			divisor = chips[i].getValue();
+			if(divisor >= dividend) { continue; }
+
 			quotient = dividend / divisor;
 			remainder = dividend % divisor;
-			extra = removeChips(chips[i], remainder);
+			extra = removeChips(chips[i],  (remainder == 0) ? quotient : remainder);
 			extra *= (extra != 0) ? divisor : 1;
 		}
+		return extra;
 	}
 
 	public int getTotalChipValue(Chips chip) {

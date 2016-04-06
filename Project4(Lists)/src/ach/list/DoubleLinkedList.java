@@ -92,7 +92,11 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 			data = iterator.next();
 			iterator.remove();
 			size--;
-			if(size == 0) { initialized = false; }
+			if(size == 0) {
+				first = null;
+				last = null;
+				initialized = false;
+			}
 		}
 
 		return data;
@@ -126,9 +130,10 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 	@Override
 	public boolean contains(E value) {
 		boolean found = false;
+		Iterator it = iterator();
 		try {
 			for (int i = 0; !found && i < getLength() + 1; i++) {
-				if (iterator().next().equals(value)) {
+				if (it.next().equals(value)) {
 					found = true;
 				}
 			}
@@ -157,7 +162,6 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 
 		for (int i = 0; i < getLength(); i++) {
 			arr[i] = iterator.next();
-			System.out.println(iterator.currIdx);
 		}
 
 		return arr;
@@ -264,11 +268,11 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 		public void remove() throws IllegalStateException {
 			//T data = null;                     //uncomment to return removed node's data
 			if (hasNextBeenCalled || hasPrevBeenCalled) {
-				currNode.getNext().setPrev(currNode.getPrev());
-				currNode.getPrev().setNext(currNode.getNext());
+				if (hasNext()) { currNode.getNext().setPrev(currNode.getPrev()); }
+				if(hasPrevious()) { currNode.getPrev().setNext(currNode.getNext()); }
 				currIdx--;
 				//data = currNode.getData();    //uncomment to return removed node's data
-				currNode = currNode.getNext();
+				//currNode = currNode.getNext();
 				hasNextBeenCalled = false;
 				hasPrevBeenCalled = false;
 			} else { throw new IllegalStateException(); }
