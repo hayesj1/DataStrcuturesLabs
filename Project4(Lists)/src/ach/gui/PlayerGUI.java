@@ -124,6 +124,7 @@ public class PlayerGUI extends JFrame {
 			JOptionPane.showMessageDialog(this, "You must select " + numPicks + " cards to pass!", "Wrong number of selected cards!", JOptionPane.ERROR_MESSAGE);
 		} else {
 			passButton.setEnabled(false);
+			numSelected = 0;
 			lastAction = PASSED;
 		}
 
@@ -143,8 +144,8 @@ public class PlayerGUI extends JFrame {
 		} else {
 			setBetButtonsEnabled(false);
 			setCheckButtonEnabled(false);
+			lastAction = RAISED;
 		}
-		lastAction = RAISED;
 	}
 	private void onCallPress(ActionEvent e) {
 		if (this.phase != Phases.bet) { return; }
@@ -176,6 +177,7 @@ public class PlayerGUI extends JFrame {
 				setBetButtonsEnabled(true);
 				setCallButtonEnabled(true);
 				setCheckButtonEnabled(true);
+				this.selectedCards.clear();
 				break;
 			case bet: // advance to pass phase
 				phase = Phases.pass;
@@ -193,19 +195,20 @@ public class PlayerGUI extends JFrame {
 				setCallButtonEnabled(false);
 				setCheckButtonEnabled(false);
 				numPicks--;
+				lastAction = NO_ACTION;
 				break;
 		}
-		lastAction = NO_ACTION;
 	}
 
 	public void deselect() {
 		for (int i = 0; i < cardButtons.length; i++) {
-			JRadioButton b = cardButtons[i];
-			Card c = this.player.getHand().getCard(i);
+			CardRadioButton b = cardButtons[i];
+			Card c = b.getCard();
 			if (b.isSelected()) { b.setSelected(false); }
-			if(selectedCards.contains(c)) { selectedCards.remove(c); }
 		}
+		this.selectedCards.clear();
 	}
+
 	public void addToPot(int val) { setPotValue(getPotValue() + val);}
 	public void setPotValue(int val) { this.currPot.setText(String.valueOf(val)); }
 	public void setGameBetValue(int val) { this.gameCurrBet.setText(String.valueOf(val)); }
@@ -230,7 +233,13 @@ public class PlayerGUI extends JFrame {
 
 	public Card[] getSelected() {
 		if(lastAction != PASSED) { return null; }
-		return selectedCards.toArray(new Card[numPicks]);
+
+		Object[] old = selectedCards.toArray();
+		Card[] ret = new Card[selectedCards.size()];
+		for (int i = 0; i < selectedCards.size(); i++) {
+			ret[i] = (Card) old[i];
+		}
+		return ret;
 	}
 
 	private void createUIComponents() {

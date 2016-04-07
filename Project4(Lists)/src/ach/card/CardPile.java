@@ -49,7 +49,7 @@ public class CardPile implements Testable {
 	 * @return the position of the card if found; -1 otherwise
 	 */
 	public int search(Card c) {
-		if (!cards.contains(c)) {
+		if (c == null || !cards.contains(c)) {
 			return -1;
 		} else {
 			int pos;
@@ -102,11 +102,11 @@ public class CardPile implements Testable {
 		Random rand = new Random(System.currentTimeMillis());
 		for (int i = 0; i < passes; i++) {
 			for (int j = 0; j < cards.getLength()/2; j++) {
-				int pos = j + rand.nextInt(cards.getLength() - j);
+				int pos = j + rand.nextInt(cards.getLength() - (j + 1));
+				pos++;
 				Card first = cards.getEntry(j);
 				Card second = cards.replace(pos, first);
 				cards.replace(j, second);
-
 			}
 		}
 	}

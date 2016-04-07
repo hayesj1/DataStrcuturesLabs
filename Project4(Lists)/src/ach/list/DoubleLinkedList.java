@@ -109,7 +109,7 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 		} else {
 			E data = null;
 			ListIterator iterator = new ListIterator();
-			for (int i = 0; i < position - 1; i++, iterator.next()) ;
+			for (int i = 0; i < position; i++, iterator.next()) ;
 			data = iterator.next();
 			iterator.set(newEntry);
 			return data;
@@ -129,6 +129,9 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 
 	@Override
 	public boolean contains(E value) {
+		if(isEmpty()) {
+			return false;
+		}
 		boolean found = false;
 		Iterator it = iterator();
 		try {
@@ -205,7 +208,7 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 		private boolean hasPrevBeenCalled;
 
 		public ListIterator() {
-			this.currNode = null;
+			this.currNode = first;
 			this.currIdx = -1;
 			this.hasNextBeenCalled = false;
 			hasPrevBeenCalled = false;
@@ -216,7 +219,6 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 		public E next() throws NoSuchElementException {
 			E data = null;
 			if(currIdx < 0) {
-				this.currNode = first;
 				data = this.currNode.getData();
 				currIdx++;
 				hasNextBeenCalled = true;

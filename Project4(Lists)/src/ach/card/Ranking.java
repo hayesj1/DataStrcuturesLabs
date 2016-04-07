@@ -59,7 +59,7 @@ public enum Ranking {
 
 	private static boolean isRF(Card[] cards) {
 		boolean royalStraight = true, flush = (isF(cards));
-		Card[] scards = cards.clone();
+		Card[] scards = deepCopyArray(cards);
 		Arrays.sort(scards, (o1, o2) -> (o1.compareTo(o2)));
 		Faces face = Faces.TEN;
 		for (int i = 0; royalStraight && i < scards.length; i++) {
@@ -85,7 +85,7 @@ public enum Ranking {
 			card2 = findMatch(matcher, cards);
 			if (card2 == null) { continue; }
 
-			Card[] cards2 = cards.clone();
+			Card[] cards2 = deepCopyArray(cards);
 			for(Card c : cards2) {
 				if(c.exactEquals(card1) || c.exactEquals(card2)) { c = null; }
 			}
@@ -93,7 +93,7 @@ public enum Ranking {
 			card3 = findMatch(matcher, cards2);
 			if(card3 == null) { continue; }
 
-			Card[] cards3 = cards2.clone();
+			Card[] cards3 = deepCopyArray(cards2);
 			for(Card c : cards3) {
 				if(c.exactEquals(card3)) { c = null; }
 			}
@@ -109,7 +109,7 @@ public enum Ranking {
 	private static boolean isFH(Card[] cards) {
 		boolean foundPair = false, foundThreeKind = false;
 		Card matcher, matcher2, card2, card3;
-		Card[] cards2 = cards.clone();
+		Card[] cards2 = deepCopyArray(cards);
 		Card[] cards3;
 
 		// find pair
@@ -135,7 +135,7 @@ public enum Ranking {
 			card2 = findMatch(matcher2, cards2);
 			if (card2 == null) { continue; }
 
-			cards3 = cards2.clone();
+			cards3 = deepCopyArray(cards2);
 			for (Card c : cards3) {
 				if (c.exactEquals(card1) || c.exactEquals(card2)) { c = null; }
 			}
@@ -151,7 +151,7 @@ public enum Ranking {
 	}
 	private static boolean isF(Card[] cards) {
 		boolean sameSuit = true, firstCardValid = true, lastCardValid = true;
-		Card[] scards = cards.clone();
+		Card[] scards = deepCopyArray(cards);
 		Arrays.sort(scards, (o1, o2) -> (o1.compareTo(o2)));
 		Card card1;
 		for (int i = 0; sameSuit && i < scards.length-1; i++) {
@@ -172,7 +172,7 @@ public enum Ranking {
 	}
 	private static boolean isS(Card[] cards) {
 		boolean consecutive = true, firstCardValid = true, lastCardValid = true;
-		Card[] scards = cards.clone();
+		Card[] scards = deepCopyArray(cards);
 		Arrays.sort(scards, (o1, o2) -> (o1.compareTo(o2)));
 		Card card1;
 		for (int i = 0; consecutive && i < scards.length-1; i++) {
@@ -201,7 +201,7 @@ public enum Ranking {
 			card2 = findMatch(matcher, cards);
 			if (card2 == null) { continue; }
 
-			Card[] cards2 = cards.clone();
+			Card[] cards2 = deepCopyArray(cards);
 			for(Card c : cards2) {
 				if(c.exactEquals(card1) || c.exactEquals(card2)) { c = null; }
 			}
@@ -283,6 +283,17 @@ public enum Ranking {
 				ret = card;
 			}
 		}
+		return ret;
+	}
+
+	private static Card[] deepCopyArray(Card[] src) {
+		Card[] ret = new Card[src.length];
+
+		for (int i = 0; i < src.length; i++) {
+			Card card = new Card(src[i].getSuit(), src[i].getFace());
+			ret[i] = card;
+		}
+
 		return ret;
 	}
 }

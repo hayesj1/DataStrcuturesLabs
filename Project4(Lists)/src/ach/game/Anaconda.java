@@ -93,19 +93,18 @@ public class Anaconda {
 			bet();
 			nextGUIPhase(); // passing phase
 			passCards(i);   // sets each player's gui to wait while remaining players pass
+			nextGUIPhase(); // waiting phase
 			for (Player player : players) {
 				player.getGui().resetHandDisplay();
 				player.getGui().setPotValue(this.pot.getTotalValue());
 			}
 		}
-
 		Player winner = getHandWinner();
 		ArrayList<Player> winners = null;
 		int leftOvers = 0;
-
 		if(winner != null) { // No tie
 			winner.addValueToStash(pot.getTotalValue());
-			System.out.println("Hand Complete! The Winner is: " + winner);
+			System.out.println("Hand Complete! The Winner is: " + winner + ", with hand rank: " + winner.getCurrRank());
 		} else { // There was a tie
 			winners = new ArrayList<>();
 			Ranking win = players[0].getCurrRank();
@@ -127,6 +126,10 @@ public class Anaconda {
 			leftOvers = potSize % numWinners;
 			winners.forEach(player -> player.addValueToStash(winnings));
 			System.out.println("Hand Complete! The Winners of the Tie are: " + winners);
+			System.out.println("The Ranks were:");
+			for (int i = 0; i < winners.size(); i++) {
+				System.out.println("Player " + (i+1) + "\'s Rank: " + winners.get(i).getCurrRank());
+			}
 		}
 
 		pot.reset();
@@ -164,7 +167,10 @@ public class Anaconda {
 					action = gui.getAction();
 					try {
 						Thread.sleep(500);
-					} catch (InterruptedException e) {}
+						if(action == PlayerGUI.RAISED) {
+							currBet = gui.getBetValue();
+						}
+					} catch (InterruptedException | NumberFormatException e) { continue; }
 				} while (action == PlayerGUI.NO_ACTION);
 
 				if(action == PlayerGUI.RAISED) {
@@ -205,20 +211,22 @@ public class Anaconda {
 
 	private void passCards(int numCardsToPass) {
 		Card[][] cardsToPass = new Card[players.length][numCardsToPass];
+		Card[] temp = null;
 		for(int i = 0; i < players.length; i++) {
 			PlayerGUI gui = players[i].getGui();
 			gui.setVisible(true);
 			System.out.println("Player " + players[i] + ", please select " + numCardsToPass + " cards to pass!");
-			while(gui.getAction() != PlayerGUI.PASSED) { // Keep looping until the player has pressed the pass button
+			while(gui.getAction() != PlayerGUI.PASSED || temp == null) { // Keep looping until the player has pressed the pass button
 				try {
 					Thread.sleep(500); //free up cpu while waiting
-				} catch (InterruptedException e) {}
+				} catch (InterruptedException e) { continue; }
+				temp = gui.getSelected();
 			}
-			cardsToPass[i] = gui.getSelected();
+			cardsToPass[i] = temp;
 			gui.setVisible(false);
 			gui.deselect(); //deselects the selected cards
+			temp = null;
 		}
-		nextGUIPhase(); // make all guis wait
 
 		System.out.println("Passing cards!");
 		// Pass the cards stopping right before the last player passes
@@ -233,7 +241,13 @@ public class Anaconda {
 			// swap the card at player 1's pass position with player 3's passed card,
 			// then swap the returned card with the card at player 2's pass position,
 			// and then returned card with the card at player 3's pass position
-			players[2].getHand().swapCard(players[1].getHand().swapCard(players[0].getHand().swapCard(pass3, cardPos1), cardPos2), cardPos3);
+			players[0].getHand().swapCard(pass3, cardPos1);
+			players[1].getHand().swapCard(pass1, cardPos2);
+			players[2].getHand().swapCard(pass2, cardPos3);
+		}
+
+		for (Player p : players) {
+			p.getGui().resetHandDisplay();
 		}
 	}
 

@@ -38,11 +38,9 @@ public class Hand extends CardPile implements Testable{
 	public Card[] toArray() {
 		Card[] ret = new Card[cards.getLength()];
 		Iterator<Card> iterator = cards.iterator();
-		System.out.println(cards.getEntry(0));
 		for (int i = 0; i < ret.length; i++) {
 			Card c = iterator.next();
 			ret[i] = c;
-			System.out.println(ret[i] + ", " + c);
 		}
 		return ret;
 	}

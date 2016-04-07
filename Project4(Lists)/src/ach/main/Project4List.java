@@ -30,8 +30,6 @@ public class Project4List {
 		System.out.println("Welcome to Anaconda!");
 		Anaconda game = new Anaconda(numPlayers, startingPot, startingStash);
 		game.init();
-		int handNo = 1;
-		while(!game.gameOver())
-		game.start(handNo);
+		game.start(1);
 	}
 }
