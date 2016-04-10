@@ -19,15 +19,14 @@ class BinaryNode <T> implements IBinaryNode<T> {
 		this (null);
 	}
 
-	public BinaryNode (T rootData) {
-		this (rootData, null, null);
-	}
+	public BinaryNode (T rootData) { this (rootData, null, null); }
 
-	public BinaryNode (T rootData, BinaryNode <T> newLeftChild,
-	                   BinaryNode <T> newRightChild) {
+	public BinaryNode (T rootData, BinaryNode <T> newLeftChild, BinaryNode <T> newRightChild) {
 		data = rootData;
 		leftChild = newLeftChild;
 		rightChild = newRightChild;
+
+		this.size = computeNumberOfNodes(newLeftChild) + computeNumberOfNodes(newRightChild) + 1;
 	}
 
 	@Override
@@ -59,6 +58,7 @@ class BinaryNode <T> implements IBinaryNode<T> {
 	@Override
 	public void setRightChild(IBinaryNode<T> rightChild) {
 		this.rightChild = (BinaryNode<T>) rightChild;
+		this.size += computeNumberOfNodes(rightChild);
 	}
 
 	@Override
@@ -98,8 +98,21 @@ class BinaryNode <T> implements IBinaryNode<T> {
 	}
 
 
-	private static int computeNumberOfNodes(IBinaryNode leftChild) {
-		return 0;
+	private static int computeNumberOfNodes(IBinaryNode node) {
+		int ret = 0;
+		if(node == null) {
+			ret = 0;
+		} else if(node.isLeaf()) {
+			ret = 1;
+		} else {
+			if (node.hasLeftChild()) {
+				ret += computeNumberOfNodes(node.getLeftChild());
+			}
+			if (node.hasRightChild()) {
+				ret += computeNumberOfNodes(node.getRightChild());
+			}
+		}
+		return ret;
 	}
 }
 
