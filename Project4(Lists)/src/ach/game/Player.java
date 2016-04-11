@@ -1,8 +1,6 @@
 package ach.game;
 
-import ach.card.Card;
-import ach.card.Hand;
-import ach.card.Ranking;
+import ach.card.*;
 import ach.gui.PlayerGUI;
 import ach.test.Testable;
 
@@ -95,6 +93,36 @@ public class Player implements Testable{
 	public boolean test() {
 		System.out.println("Testing class: Player");
 		//TODO add actual testing here
+
+		Player Stacy = new Player("Stacy");
+		Player Robert = new Player("Robert");
+		Card HeartKing = new Card(Suits.CLUB, Faces.KING);
+		Card DiamondQueen = new Card(Suits.DIAMOND, Faces.QUEEN);
+
+		Stacy.addCardToHand(HeartKing);
+		Robert.addCardToHand(DiamondQueen);
+
+		System.out.println(Stacy.getHand().toString());
+		System.out.println(Robert.getHand().toString());
+
+		Stacy.addChips(5,5,5,5,5,5);
+		Robert.addChips(3,3,3,3,3,3);
+		Stacy.addToBet(12);
+		Robert.addToBet(6);
+
+		System.out.println(Stacy.getBet() + " " + Stacy.getPlayerID() + "\n");
+		System.out.println(Robert.getBet() + " " + Robert.getPlayerID() + "\n");
+
+		Stacy.setBetAmount(25);
+		Robert.setBetAmount(40);
+
+		System.out.println(Stacy.getBet() + " " + Stacy.getPlayerID() + "\n");
+		System.out.println(Robert.getBet() + " " + Robert.getPlayerID() + "\n");
+
+		System.out.println(Stacy.getStashValue() + " " + Stacy.getPlayerID() + "\n");
+		System.out.println(Robert.getStashValue() + " " + Robert.getPlayerID() + "\n");
+
+
 
 		return true;
 	}

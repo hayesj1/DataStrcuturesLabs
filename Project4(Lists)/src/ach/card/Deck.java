@@ -47,7 +47,7 @@ public class Deck extends CardPile implements Testable {
 	@Override
 	public boolean test() {
 		System.out.println("Testing class: Deck");
-		//TODO add actual testing here
+
 
 		return true;
 	}
