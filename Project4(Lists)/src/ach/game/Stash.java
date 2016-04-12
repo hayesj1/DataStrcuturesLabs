@@ -122,7 +122,23 @@ public class Stash implements Testable {
 	@Override
 	public boolean test() {
 		System.out.println("Testing class: Stash");
-		//TODO add actual testing here
+
+		Stash testStash = new Stash();
+
+		testStash.addValue(100);
+		System.out.println(testStash.toString());
+		testStash.removeValue(25);
+
+		System.out.println(testStash.toString());
+
+		testStash.addChips(Chips.Black, 20);
+		System.out.println(testStash.getTotalValue());
+		testStash.removeValue(5);
+
+		System.out.println(testStash.getTotalValue());
+		testStash.reset();
+		System.out.println(testStash.getTotalValue());
+
 
 		return true;
 	}
