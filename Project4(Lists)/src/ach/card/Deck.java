@@ -48,6 +48,17 @@ public class Deck extends CardPile implements Testable {
 	public boolean test() {
 		System.out.println("Testing class: Deck");
 
+		Player Stacy = new Player("Stacy");
+		Player Robert = new Player("Robert");
+		Card HeartKing = new Card(Suits.CLUB, Faces.KING);
+		Card DiamondQueen = new Card(Suits.DIAMOND, Faces.QUEEN);
+		Card[] cardArray = {HeartKing,DiamondQueen};
+		Player[] playerArray = {Stacy, Robert};
+
+		Deck testDeck = new Deck(cardArray);
+		testDeck.deal(playerArray);
+
+
 
 		return true;
 	}
