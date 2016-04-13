@@ -139,7 +139,7 @@ public class Stash implements Testable {
 		testStash.reset();
 		System.out.println(testStash.getTotalValue());
 
-		System.err.println("Chip-Value Conversion Algorithm NYI!\nChip-Value Conversion Algorithm probably broken! Incorrect values probably displayed"); me
+		System.err.println("Chip-Value Conversion Algorithm NYI!\nChip-Value Conversion Algorithm probably broken! Incorrect values probably displayed");
 
 		return true;
 	}
