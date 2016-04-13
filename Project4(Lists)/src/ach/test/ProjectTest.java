@@ -1,9 +1,6 @@
 package ach.test;
 
-import ach.card.Card;
-import ach.card.CardPile;
-import ach.card.Deck;
-import ach.card.Hand;
+import ach.card.*;
 import ach.game.Player;
 import ach.game.Stash;
 
@@ -20,6 +17,9 @@ public class ProjectTest {
 
 	public static void main(String[] args) {
 		Card[] cards = new Card[3];
+		cards[0] = new Card(Suits.CLUB, Faces.ACE);
+		cards[1] = new Card(Suits.DIAMOND, Faces.ACE);
+		cards[2] = new Card(Suits.HEART, Faces.ACE);
 		CardPile pile = new CardPile();
 		CardPile pile2 = new CardPile(cards);
 		Deck deck = new Deck();

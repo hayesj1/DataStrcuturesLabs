@@ -30,8 +30,7 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 	}
 	private void init() {
 		first = new Node(null, null, null);
-		last = new Node(null, first, null);
-		first.setNext(last);
+		last = first;
 		initialized = true;
 	}
 
@@ -42,15 +41,10 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 			first.setData(newEntry);
 			size++;
 		} else {
-			if(size > 1) {
-				Node temp = new Node(newEntry, last, null);
-				last.setNext(temp);
-				last = temp;
-				size++;
-			} else {
-				last.setData(newEntry);
-				size++;
-			}
+			Node temp = new Node(newEntry, last, null);
+			last.setNext(temp);
+			last = temp;
+			size++;
 		}
 	}
 
@@ -59,15 +53,19 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 		if(position < 0 || position > size-1) {
 			throw new IndexOutOfBoundsException("Index " + position + ", is > for max index " + (size-1) + ", or is < 0");
 		}
+
 		if (!initialized || isEmpty()) {
 			init();
 			first.setData(newEntry);
 			size++;
 		} else if (position == size - 1) {
-			last.setData(newEntry);
+			Node temp = new Node(newEntry, last, null);
+			last.setNext(temp);
+			last = temp;
+			size++;
 		} else {
 			ListIterator iterator = new ListIterator();
-			for (int i = 0; i < position; i++, iterator.next()) ;
+			for (int i = 0; i < position+1; i++, iterator.next());
 			iterator.add(newEntry);
 			size++;
 		}
@@ -77,11 +75,13 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 	public E remove(int position) {
 		E data = null;
 		if(!initialized || isEmpty()) {
-			return null;
+			return data;
 		} else if (position == 0) {
 			data = first.getData();
-			first = first.getNext();
-			first.setPrev(null);
+			if (size > 1) {
+				first = first.getNext();
+				first.setPrev(null);
+			}
 		} else if (position == size-1) {
 			data = last.getData();
 			last = last.getPrev();
@@ -91,12 +91,13 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 			for (int i = 0; i < position - 1; i++, iterator.next()) ;
 			data = iterator.next();
 			iterator.remove();
-			size--;
-			if(size == 0) {
-				first = null;
-				last = null;
-				initialized = false;
-			}
+		}
+
+		size--;
+		if(size == 0) {
+			first = null;
+			last = null;
+			initialized = false;
 		}
 
 		return data;
@@ -158,12 +159,23 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 		initialized = false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public E[] toArray() {
-		E[] arr = (E[]) new Object[getLength()];
+	public E[] toArray(E[] dest) {
+		E[] arr = null;
+		if(dest != null) {
+			if (dest.length < this.size) {
+				arr = (E[]) new Object[size];
+			} else {
+				arr = dest;
+			}
+		} else {
+			arr = (E[]) new Object[size];
+		}
+
 		ListIterator iterator = (ListIterator) this.iterator();
 
-		for (int i = 0; i < getLength(); i++) {
+		for (int i = 0; i < arr.length; i++) {
 			arr[i] = iterator.next();
 		}
 
@@ -289,10 +301,16 @@ public class DoubleLinkedList<E> implements IList<E>, Iterable<E> {
 
 		@Override
 		public void add(E newEntry) {
-			Node temp = new Node(newEntry, currNode.getPrev(), currNode.getNext());
-			currNode.getPrev().setNext(temp);
-			currNode.getNext().setPrev(temp);
-			currIdx++;
+			if (hasNextBeenCalled) {
+				Node temp = new Node(newEntry, currNode.getPrev(), currNode);
+				if (hasPrevious()) { currNode.getPrev().setNext(temp); }
+				currNode.setPrev(temp);
+				currIdx++;
+			} else if (hasPrevBeenCalled) {
+				Node temp = new Node(newEntry, currNode, currNode.getNext());
+				if (hasNext()) { currNode.getNext().setPrev(temp); }
+				currNode.setNext(temp);
+			} else { throw new IllegalStateException(); }
 		}
 	}
 }

@@ -58,7 +58,7 @@ public interface IList<E> {
 	boolean isEmpty();
 
 	void clear();
-	E[] toArray();
+	E[] toArray(E[] dest);
 
 	int getLength();
 }

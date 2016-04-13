@@ -80,8 +80,8 @@ public class CardPile implements Testable {
 		for (int j = 0; j < this.cards.getLength()-middle; j++, i++) {
 			cards2[j] = this.cards.getEntry(i);
 		}
-		ret[1] = new CardPile(cards1);
-		ret[2] = new CardPile(cards2);
+		ret[0] = new CardPile(cards1);
+		ret[1] = new CardPile(cards2);
 
 		return ret;
 	}
@@ -112,14 +112,19 @@ public class CardPile implements Testable {
 	}
 
 	public Card getTopCard() { return cards.getEntry(0); }
-	public Card getBottomCard() { return cards.getEntry(cards.getLength()); }
+	public Card getBottomCard() { return cards.getEntry(cards.getLength()-1); }
+	public DoubleLinkedList<Card> getCards() { return cards; }
 
 	@Override
 	public String toString() {
 		StringBuilder strBlder = new StringBuilder();
-		for (Card c : cards) {
-			strBlder.append(c);
-			strBlder.append('\n');
+		if(cards.getLength() > 0) {
+			for (Card c : cards) {
+				strBlder.append(c);
+				strBlder.append('\n');
+			}
+		} else {
+			strBlder.append("No Cards!");
 		}
 		return strBlder.toString();
 	}

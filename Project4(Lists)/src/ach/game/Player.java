@@ -92,11 +92,10 @@ public class Player implements Testable{
 	@Override
 	public boolean test() {
 		System.out.println("Testing class: Player");
-		//TODO add actual testing here
 
 		Player Stacy = new Player("Stacy");
 		Player Robert = new Player("Robert");
-		Card HeartKing = new Card(Suits.CLUB, Faces.KING);
+		Card HeartKing = new Card(Suits.HEART, Faces.KING);
 		Card DiamondQueen = new Card(Suits.DIAMOND, Faces.QUEEN);
 
 		Stacy.addCardToHand(HeartKing);
@@ -122,7 +121,7 @@ public class Player implements Testable{
 		System.out.println(Stacy.getStashValue() + " " + Stacy.getPlayerID() + "\n");
 		System.out.println(Robert.getStashValue() + " " + Robert.getPlayerID() + "\n");
 
-
+		System.err.println("Chip-Value Conversion Algorithm NYI!\nChip-Value Conversion Algorithm probably broken! Incorrect values probably displayed");
 
 		return true;
 	}
